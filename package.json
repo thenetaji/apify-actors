@@ -1,0 +1,22 @@
+{
+  "name": "youtube-music-downloader",
+  "version": "1.0.0",
+  "description": "Downloads audio from a given YouTube URL. Try it out!",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "thenetaji",
+  "license": "MIT",
+  "dependencies": {
+    "apify": "^3.2.6"
+  },
+  "keywords": [
+    "downloader",
+    "audio",
+    "video",
+    "youtube",
+    "music"
+  ]
+}

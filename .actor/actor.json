@@ -1,0 +1,53 @@
+{
+  "actorSpecification": 1,
+  "name": "Youtube-Music-Downloader",
+  "title": "Youtube Music Downloader",
+  "description": "Downloads audio from a given YouTube URL. Try it out!!",
+  "version": "1.0",
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "views": {
+        "overview": {
+          "title": "Download Results",
+          "transformation": {
+            "fields": [
+              "publicUrl",
+              "title",
+              "fileName",
+              "timestamp",
+              "error"
+            ]
+          },
+          "display": {
+            "component": "table",
+            "properties": {
+              "publicUrl": {
+                "label": "Download Link",
+                "format": "link"
+              },
+              "title": {
+                "label": "Title",
+                "format": "text"
+              },
+              "fileName": {
+                "label": "File Name",
+                "format": "text"
+              },
+              "timestamp": {
+                "label": "Downloaded At",
+                "format": "date"
+              },
+              "error": {
+                "label": "Error Message",
+                "format": "text"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": ["downloader", "audio", "video", "youtube"],
+  "authors": ["thenetaji"]
+}
