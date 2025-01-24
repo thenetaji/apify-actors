@@ -2,3 +2,9 @@ storage
 node_modules
 .venv
 package-lock.json
+
+# Ignore all 'shared' folders
+**/shared/
+
+# Exclude the 'shared' folder in the root directory
+!/shared/

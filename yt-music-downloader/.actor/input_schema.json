@@ -1,0 +1,40 @@
+{
+  "title": "Youtube Music downloader input fields",
+  "description": "Input Youtube Music URL and configure other options",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "url": {
+      "title": "Video URL",
+      "type": "string",
+      "description": "The URL of the video to download as song",
+      "editor": "textfield",
+      "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    "quality": {
+      "title": "Select quality",
+      "description": "Select music quality to download",
+      "type": "string",
+      "editor": "select",
+      "default": "best",
+      "enum": ["best", "320", "256", "128", "64"],
+      "enumTitles": ["Best", "320kbp/s", "256kbp/s", "128kbp/s", "64kbp/s"]
+    },
+    "convertToMp3": {
+      "title": "Select file type",
+      "description": "Select music file type (.mp3,.ogg,.webm)",
+      "type": "string",
+      "editor": "select",
+      "default": "default",
+      "enum": ["default", "mp3", "webm", "opus", "ogg"],
+      "enumTitles": ["default", "mp3", "webm", "opus", "ogg"]
+    },
+    "proxy": {
+      "title": "Use residential proxy",
+      "type": "boolean",
+      "description": "Enable proxy for downloading, only residential proxy would be used as others don't work",
+      "default": true
+    }
+  },
+  "required": ["url"]
+}
