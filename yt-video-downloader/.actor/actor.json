@@ -1,0 +1,8 @@
+{
+  "actorSpecification": 1,
+  "name": "youtube-video-downloader",
+  "version": "1.0",
+  "dockerfile": "./Dockerfile",
+  "readme": "../README.md",
+  "input": "./input_schema.json"
+}

@@ -4,7 +4,7 @@ const { combine, colorize, printf, timestamp } = format;
 export const logger = winston.createLogger({
   level: "info",
   format: combine(
-  	timestamp({ format: "DD-MM-YYYY HH:mm:ss" }),
+    timestamp({ format: "DD-MM-YYYY HH:mm:ss" }),
     printf(({ level, message, timestamp, ...meta }) => {
       const metaFormatted = Object.keys(meta).length
         ? JSON.stringify(meta, null, 2)

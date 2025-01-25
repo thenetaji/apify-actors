@@ -9,7 +9,7 @@
       "type": "string",
       "description": "The URL of the video to download as song",
       "editor": "textfield",
-      "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      "prefill": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     },
     "quality": {
       "title": "Select quality",
@@ -17,6 +17,7 @@
       "type": "string",
       "editor": "select",
       "default": "best",
+      "prefill": "best",
       "enum": ["best", "320", "256", "128", "64"],
       "enumTitles": ["Best", "320kbp/s", "256kbp/s", "128kbp/s", "64kbp/s"]
     },
@@ -26,6 +27,7 @@
       "type": "string",
       "editor": "select",
       "default": "default",
+      "prefill": "default",
       "enum": ["default", "mp3", "webm", "opus", "ogg"],
       "enumTitles": ["default", "mp3", "webm", "opus", "ogg"]
     },
@@ -36,5 +38,5 @@
       "default": true
     }
   },
-  "required": ["url"]
+  "required": ["url", "convertToMp3", "quality"]
 }

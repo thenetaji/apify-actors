@@ -1,0 +1,64 @@
+{
+  "title": "Youtube Video downloader input fields",
+  "description": "Input Youtube Video URL and configure other options",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "url": {
+      "title": "Video URL",
+      "type": "string",
+      "description": "The URL of the video to download",
+      "editor": "textfield",
+      "prefill": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    "quality": {
+      "title": "Select quality",
+      "description": "Select video quality to download",
+      "type": "string",
+      "editor": "select",
+      "default": "360",
+      "prefill": "360",
+      "enum": [
+        "144",
+        "240",
+        "360",
+        "480",
+        "720",
+        "1080",
+        "1440",
+        "2160",
+        "4320",
+        "best"
+      ],
+      "enumTitles": [
+        "144p",
+        "240p",
+        "360p",
+        "480p",
+        "720p",
+        "1080p",
+        "1440p",
+        "2160p",
+        "4320p",
+        "best"
+      ]
+    },
+    "format": {
+      "title": "Select file type (can be slow)",
+      "description": "Select video file type (.mp4, .mkv, .webm)",
+      "type": "string",
+      "editor": "select",
+      "default": "default",
+      "prefill": "default",
+      "enum": ["default", "mp4", "webm", "mkv"],
+      "enumTitles": ["default", "mp4", "webm", "mkv"]
+    },
+    "proxy": {
+      "title": "Use residential proxy",
+      "type": "boolean",
+      "description": "Enable proxy for downloading, only residential proxy would be used as others don't work",
+      "default": true
+    }
+  },
+  "required": ["url", "proxy", "format", "quality"]
+}

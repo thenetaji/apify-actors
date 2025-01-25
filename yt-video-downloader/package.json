@@ -1,6 +1,6 @@
 {
-  "name": "apify-youtube-music-downloader-actor",
-  "version": "2.0",
+  "name": "apify-youtube-video-downloader-actor",
+  "version": "1.0",
   "description": "Download Youtube Music at one click",
   "type": "module",
   "main": "app.js",

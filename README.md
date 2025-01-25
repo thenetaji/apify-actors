@@ -4,11 +4,11 @@
 
 First of all welcome. Finally some real person insteads of some bots, could reach my another failed project. If you are a human please send me a mail what brings you here.
 
-When I discovered Apify for some automation and for some of my projects, then I headed to the store to look at some of the prebuilt actors but they were charging too much which was unneccesary for my another failed project. 
+When I discovered Apify for some automation and for some of my projects, then I headed to the store to look at some of the prebuilt actors but they were charging too much which was unneccesary for my another failed project.
 
 So as you have guessed I created my own, btw I am still exploring web-dev so thought I will learn learn some more concepts in the way and also will be able to help people who are searching cheaper options (and maybe I could get some bucks)
 
-## Project structure 
+## Project structure
 
 I choosed mono-repo approach so that I can manage all under one repo.
 

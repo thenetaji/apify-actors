@@ -2,7 +2,7 @@ import { spawn } from "child_process";
 import { logger as log } from "./logger.js";
 
 async function download(options) {
-	log.debug("starting with options",{ options });
+  log.debug("starting with options", { options });
   const shell = spawn("yt-dlp", options);
 
   let stderr = "";

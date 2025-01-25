@@ -13,7 +13,7 @@ export async function initializeActor() {
     log.debug("Input retrieved:", input);
 
     log.info("Step 3/10: Validating input...");
-    const requiredFields = ["url", "quality", "proxy", "convertToMp3"];
+    const requiredFields = ["url", "quality", "proxy"];
     const missingFields = requiredFields.filter((field) => !input[field]);
 
     if (missingFields.length > 0) {
@@ -22,8 +22,8 @@ export async function initializeActor() {
       throw new Error(errorMessage);
     }
 
-    const { url, quality, proxy, convertToMp3 } = input;
-    log.debug("Input validation passed", { url, quality, proxy, convertToMp3 });
+    const { url, quality, proxy, format } = input;
+    log.debug("Input validation passed", { url, quality, proxy, format });
 
     log.info("Step 4/10: Configuring proxy...");
     const proxyConfig = await Actor.createProxyConfiguration({
@@ -37,18 +37,22 @@ export async function initializeActor() {
       url,
       quality,
       proxyURL,
-      convertToMp3,
+      format,
     );
     log.debug("Download function returned", { title, filePath });
 
-    log.info("Step 6/10: Reading downloaded file...");
-    const fileBuffer = fs.readFileSync(filePath);
     const extension = filePath.split(".").pop();
-    log.debug("File read successfully", { extension, filePath });
+    const key = `${title.split(".")[0]}.${extension}`;
+    log.debug(`Extension: ${extension}, Key: ${key}`);
+
+    log.info("Step 6/10: Reading downloaded file...");
+    //using key as filepath beacuse filePath contains some chars which later gets removed by ytdlp as post-process eg:- "Stunning_Sunset_Seen_From_The_Sea_Time_lapse_10_Seconds_Video_Nature_Blogs.f251.webm"
+
+    const fileBuffer = fs.readFileSync(key);
+    log.debug("File read successfully", { key });
 
     log.info("Step 7/10: Saving file to store...");
     const keyValueStore = await Actor.openKeyValueStore();
-    const key = `${title}.${extension}`;
     await keyValueStore.setValue(key, fileBuffer, {
       contentType: `audio/${extension}`,
     });
@@ -80,53 +84,52 @@ export async function initializeActor() {
 
 export async function downloadYoutubeMusic(
   URL,
-  selectedQuality = "best",
+  selectedQuality = "360",
   proxyURL = null,
-  convertToMp3 = "default",
+  format = "default",
 ) {
   log.debug("Preparing to download music...");
-  log.debug("Download parameters", {
-    URL,
-    selectedQuality,
-    proxyURL,
-    convertToMp3,
-  });
+  log.debug("Download parameters", { URL, selectedQuality, proxyURL, format });
 
   const qualityToCode = {
-    64: 0,
-    128: 5,
-    256: 9,
-    320: 10,
-    best: "best",
+    144: "bestvideo[height<=144]+bestaudio/best",
+    240: "bestvideo[height<=240]+bestaudio/best",
+    360: "bestvideo[height<=360]+bestaudio/best",
+    480: "bestvideo[height<=480]+bestaudio/best",
+    720: "bestvideo[height<=720]+bestaudio/best",
+    1080: "bestvideo[height<=1080]+bestaudio/best",
+    1440: "bestvideo[height<=1440]+bestaudio/best",
+    2160: "bestvideo[height<=2160]+bestaudio/best",
+    4320: "bestvideo[height<=4320]+bestaudio/best",
+    best: "bestvideo+bestaudio",
   };
 
   const quality = qualityToCode[selectedQuality];
   if (!quality) {
-    const errorMessage =
-      "Format or quality not matched with the provided values";
+    const errorMessage = "Quality not matched with the provided values";
     log.error(errorMessage);
     throw new Error(errorMessage);
   }
-  log.debug(
-    `Selected audio quality: "${selectedQuality}" (mapped to "${quality}")`,
-  );
+
+  log.debug(`Selected quality: "${selectedQuality}" (mapped to "${quality}")`);
 
   const options = [
-    "--extract-audio",
-    "--audio-quality",
+    "--format",
     quality,
     "--output",
     "%(title)s.%(ext)s",
-    "--restrict-filenames", // Avoid special characters in the filename
-    "--proxy",
-    proxyURL,
-    URL,
+    "--restrict-filenames", // Avoid special characters in filenames
   ];
 
-  if (convertToMp3 !== "default") {
-    options.push(`--audio-format,
-    ${convertToMp3}`);
+  if (proxyURL != null) {
+    options.push("--proxy", proxyURL);
   }
+  if (format !== "default") {
+    options.push("--merge-output-format", format);
+  }
+  options.push(URL);
+
+  log.debug("Final yt-dlp options:", options);
 
   const { filePath, title } = await download(options);
   log.debug("Download completed", { filePath, title });
