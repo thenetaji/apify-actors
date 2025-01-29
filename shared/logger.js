@@ -1,7 +1,7 @@
 import winston, { format } from "winston";
 const { combine, colorize, printf, timestamp } = format;
 
-export const logger = winston.createLogger({
+const logger = winston.createLogger({
   level: "info",
   format: combine(
     timestamp({ format: "DD-MM-YYYY HH:mm:ss" }),
@@ -15,3 +15,5 @@ export const logger = winston.createLogger({
   ),
   transports: [new winston.transports.Console()],
 });
+
+export default logger;

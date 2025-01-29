@@ -1,5 +1,5 @@
 import { Actor } from "apify";
-import { logger as log } from "./shared/logger.js";
+import log from "./shared/logger.js";
 import download from "./shared/download.js";
 import fs from "fs";
 
