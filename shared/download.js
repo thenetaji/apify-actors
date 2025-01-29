@@ -1,5 +1,5 @@
 import { spawn } from "child_process";
-import { logger as log } from "./logger.js";
+import log from "./logger.js";
 
 async function download(options) {
   log.debug("starting with options", { options });
@@ -12,7 +12,7 @@ async function download(options) {
   return new Promise((resolve, reject) => {
     shell.stdout.on("data", (data) => {
       const str = data.toString();
-      log.debug(`Stdout received: ${str}`);
+      log.info(`Stdout received: ${str}`);
 
       // Example string: "[download] Destination: Rick_Astley_-_Never_Gonna_Give_You_Up_Official_Music_Video.webm"
       if (str.includes("Destination: ")) {
