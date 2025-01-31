@@ -2,7 +2,7 @@ FROM node:alpine
 
 # Install dependencies and create a Python virtual environment
 RUN apk update -q && \
-    apk add --no-cache -q python3 py3-pip ffmpeg && \
+    apk add --no-cache -q python3 py3-pip && \
     python3 -m venv /opt/venv && \
     /opt/venv/bin/pip install --quiet --upgrade pip yt-dlp && \
     rm -rf /var/cache/apk/*

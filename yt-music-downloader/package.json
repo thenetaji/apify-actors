@@ -10,8 +10,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "apify": "^3.2.6",
-    "jest": "^29.7.0",
-    "winston": "^3.17.0"
+    "apify": "^3.2.6"
+  },
+  "devDependencies": {
+  	"jest": "^29.7.0"
   }
 }

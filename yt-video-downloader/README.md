@@ -7,4 +7,4 @@
 
 ## Building
 
-Use docker command to build `sudo docker build -t app -f ./.actor/Dockerfile .` root say yt-video-downloader. and in local copy shared folder first.
+Use `npm run push` to copy shared folder and push to apify for building.

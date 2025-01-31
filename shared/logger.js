@@ -1,6 +1,9 @@
 import winston, { format } from "winston";
 const { combine, colorize, printf, timestamp } = format;
 
+/**
+ * @deprecated No longer used in this project just kept here for future reference
+ */
 const logger = winston.createLogger({
   level: "info",
   format: combine(
