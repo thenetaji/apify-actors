@@ -1,4 +1,4 @@
-import { Actor,log} from "apify";
+import { Actor,log } from "apify";
 import download from "./shared/download.js";
 import fs from "fs";
 

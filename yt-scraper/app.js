@@ -3,7 +3,7 @@ import fs from "fs";
 import { spawn } from "child_process";
 
 //uncomment in debugging
-log.setLevel(log.LEVELS.DEBUG);
+//log.setLevel(log.LEVELS.DEBUG);
 
 export async function initializeActor() {
   try {
@@ -35,7 +35,7 @@ export async function initializeActor() {
     log.info("Using residential proxy URL", { proxyURL });
 
     log.info("Step 5/10: Starting scraping process...");
-    const metaArray = await getYoutubeMetadata(url);
+    const metaArray = await getYoutubeMetadata(url, proxyURL);
     log.debug("Meta function returned", metaArray);
 
     log.info("Step 6/10: Saving data to dataset...");
