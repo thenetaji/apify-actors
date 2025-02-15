@@ -1,8 +1,0 @@
-{
-  "actorSpecification": 1,
-  "name": "ecommerce-scraper",
-  "version": "1.0",
-  "dockerfile": "./Dockerfile",
-  "readme": "../README.md",
-  "input": "./input_schema.json"
-}
