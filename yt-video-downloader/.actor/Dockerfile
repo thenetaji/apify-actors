@@ -5,13 +5,13 @@ RUN apk update -q && \
     apk add --no-cache -q python3 py3-pip ffmpeg && \
     python3 -m venv /opt/venv && \
     /opt/venv/bin/pip install --quiet --upgrade pip yt-dlp && \
-    rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/* /opt/venv/share/python-wheels/*
 
 # Update the PATH to include the virtual environment
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Set the working directory inside the container
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Copy project files
 COPY package*.json ./

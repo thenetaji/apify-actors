@@ -7,3 +7,21 @@ node_modules
 
 # Exclude the 'shared' folder in the root directory
 !/shared/
+
+# Ignore video files
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+*.mpeg
+
+# Ignore audio files
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.aac
+*.m4a

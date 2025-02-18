@@ -1,6 +1,8 @@
 {
-  "url": "https://youtu.be/xuP4g7IDgDM?si=HaRs_6lM5R7yje6G",
+  "urls": [
+    {"url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy"},
+    {"url": "https://youtube.com/shorts/6RaHrpLa_pE?si=PRwQv7zUMLwycFhJ"}
+    ],
   "quality": "best",
-  "proxy": true,
   "format": "default"
 }

@@ -1,15 +1,20 @@
 {
+  "schemaVersion": 1,
   "title": "Youtube Video downloader input fields",
   "description": "Input Youtube Video URL and configure other options",
   "type": "object",
-  "schemaVersion": 1,
   "properties": {
-    "url": {
-      "title": "Video URL",
-      "type": "string",
+    "urls": {
+      "title": "Video URLs",
+      "type": "array",
       "description": "The URL of the video to download",
-      "editor": "textfield",
-      "prefill": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      "editor": "requestListSources",
+      "prefill": [
+        {"url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy"}
+      ],
+      "default": [
+        {"url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy"}
+      ]
     },
     "quality": {
       "title": "Select quality",
@@ -54,11 +59,15 @@
       "enumTitles": ["default", "mp4", "webm", "mkv"]
     },
     "proxy": {
-      "title": "Use residential proxy",
-      "type": "boolean",
+      "title": "Use proxy",
+      "type": "object",
+      "editor": "proxy",
       "description": "Enable proxy for downloading, only residential proxy would be used as others don't work",
-      "default": true
+      "default": {
+        "useApifyProxy": true,
+        "apifyProxyGroups": ["RESIDENTIAL"]
+      }
     }
   },
-  "required": ["url", "proxy", "format", "quality"]
+  "required": ["urls", "proxy", "format", "quality"]
 }

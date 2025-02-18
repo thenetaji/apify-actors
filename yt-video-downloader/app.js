@@ -1,94 +1,85 @@
 import { Actor, log } from "apify";
-import download from "./shared/download.js";
-import fs from "fs";
+import downloadContent from "./shared/download.js";
+import {
+  initializeActorAndGetInput,
+  createProxyConfig,
+  saveFileToDB,
+} from "./shared/utils.js";
 
-export async function initializeActor() {
+async function initializeActor() {
   try {
-    log.info("Step 1/10: Initializing Actor...");
-    await Actor.init();
+    const inputValues = await initializeActorAndGetInput();
+    
+    /**
+     * @typedef {object} 
+     * @property {string} quality - video quality eg. 360, 240 etc
+     * @property {string} format - whether to encode video into different format eg. mp4, webm, mkv 
+     * @property {array} urls - [{url: "somerandomurls"}, {url: "samesamebutdifferent"}]
+     * @property {object} proxy
+     * @property {Boolean} proxy.useApifyProxy 
+     * @property {Array<string>} proxy.proxyGroup - ["RESIDENTIAL"] or ["DATACENTRE"] etc.
+     * @property {string} countryCode - proxy country to use
+     */
+    const {
+      quality,
+      format,
+      urls,
+      proxy: { useApifyProxy, apifyProxyGroups, countryCode },
+    } = inputValues;
 
-    log.info("Step 2/10: Retrieving input...");
-    const input = await Actor.getInput();
-    log.debug("Input retrieved:", input);
-
-    log.info("Step 3/10: Validating input...");
-    const requiredFields = ["url", "quality", "proxy"];
-    const missingFields = requiredFields.filter((field) => !input[field]);
-
-    if (missingFields.length > 0) {
-      const errorMessage = `Input validation error: Missing fields: ${missingFields.join(", ")}`;
-      log.error(errorMessage);
-      throw new Error(errorMessage);
+    if (!useApifyProxy && apifyProxyGroups != "RESIDENTIAL") {
+      throw new Error(
+        "The actor would not work with any other proxy except 'RESIDENTIAL'",
+      );
     }
 
-    const { url, quality, proxy, format } = input;
-    log.debug("Input validation passed", { url, quality, proxy, format });
+    const proxyUrl = await createProxyConfig(apifyProxyGroups, countryCode);
 
-    log.info("Step 4/10: Configuring proxy...");
-    const proxyConfig = await Actor.createProxyConfiguration({
-      groups: ["RESIDENTIAL"],
-    });
-    const proxyURL = await proxyConfig.newUrl();
-    log.info("Using residential proxy URL", { proxyURL });
-
-    log.info("Step 5/10: Starting download process...");
-    const { title, filePath } = await downloadYoutubeMusic(
-      url,
+    const downloadContent = await downloadYoutubeVideo(
+      urls,
       quality,
-      proxyURL,
       format,
+      proxyUrl,
     );
-    log.debug("Download function returned", { title, filePath });
+    log.debug(`downloadContent function returned: ${JSON.stringify(downloadContent)}`);
+    await Actor.setStatusMessage("Download complete. Saving file...");
+    
+    const outputData = [];
+    
+    for (const item of downloadContent) {
+      const ext = item.ext;
+      const contentType = `video/${ext}`;
+      
+      log.debug(`item of downloadContent: ${JSON.stringify(item)}`);
 
-    const extension = filePath.split(".").pop();
-    const key = `${title.split(".")[0]}.${extension}`;
-    log.debug(`Extension: ${extension}, Key: ${key}`);
-
-    log.info("Step 6/10: Reading downloaded file...");
-    //using key as filepath beacuse filePath contains some chars which later gets removed by ytdlp as post-process eg:- "Stunning_Sunset_Seen_From_The_Sea_Time_lapse_10_Seconds_Video_Nature_Blogs.f251.webm"
-
-    const fileBuffer = fs.readFileSync(key);
-    log.debug("File read successfully", { key });
-
-    log.info("Step 7/10: Saving file to store...");
-    const keyValueStore = await Actor.openKeyValueStore();
-    await keyValueStore.setValue(key, fileBuffer, {
-      contentType: `audio/${extension}`,
-    });
-
-    const publicUrl = `https://api.apify.com/v2/key-value-stores/${keyValueStore.id}/records/${encodeURIComponent(key)}`;
-    log.info("File saved to key-value store", { publicUrl });
-
-    log.info("Step 8/10: Pushing data to dataset...");
-    const outputData = {
-      publicUrl,
-      title,
-      fileName: `${title}.${extension}`,
-      timestamp: new Date().toISOString(),
-    };
-    await Actor.pushData(outputData);
-    log.debug("Data pushed to dataset", outputData);
-
-    log.info("Step 9/10: Saving output data...");
-    await Actor.setValue("OUTPUT", outputData);
-
-    log.info("Step 10/10: Updating status...");
-    await Actor.setStatusMessage(` Download URL: ${publicUrl}`);
-    await Actor.exit();
+      const saveFile = await saveFileToDB(item.fileTitle, item.filePath, contentType);
+      
+      outputData.push(saveFile);
+      await Actor.pushData({
+        title: saveFile.fileTitle,
+        downloadURL: saveFile.downloadUrl
+      });
+    }
+    await Actor.setStatusMessage("File saved successfully...");
+    log.debug(outputData);
+    
+    log.info(`Download Values: ${JSON.stringify(outputData, null, 2)}`);
+    
+    await Actor.exit("Download complete");
   } catch (error) {
-    log.error(`An error occurred during execution: ${error}`);
-    await Actor.exit(error, { status: 1 });
+    log.error(`An error occurred during execution: ${error.message}`);
+    await Actor.exit("An error occured", { timeoutSec: 0 });
   }
 }
 
-export async function downloadYoutubeMusic(
-  URL,
+async function downloadYoutubeVideo(
+  urls,
   selectedQuality = "360",
-  proxyURL = null,
   format = "default",
+  proxyURL = null,
 ) {
-  log.debug("Preparing to download music...");
-  log.debug("Download parameters", { URL, selectedQuality, proxyURL, format });
+  log.debug("Preparing to download video...");
+  log.debug("Download parameters", { urls, selectedQuality, proxyURL, format });
 
   const qualityToCode = {
     144: "bestvideo[height<=144]+bestaudio/best",
@@ -97,43 +88,25 @@ export async function downloadYoutubeMusic(
     480: "bestvideo[height<=480]+bestaudio/best",
     720: "bestvideo[height<=720]+bestaudio/best",
     1080: "bestvideo[height<=1080]+bestaudio/best",
-    1440: "bestvideo[height<=1440]+bestaudio/best",
-    2160: "bestvideo[height<=2160]+bestaudio/best",
-    4320: "bestvideo[height<=4320]+bestaudio/best",
     best: "bestvideo+bestaudio",
   };
 
   const quality = qualityToCode[selectedQuality];
-  if (!quality) {
-    const errorMessage = "Quality not matched with the provided values";
-    log.error(errorMessage);
-    throw new Error(errorMessage);
-  }
+  if (!quality) throw new Error("Invalid quality");
 
-  log.debug(`Selected quality: "${selectedQuality}" (mapped to "${quality}")`);
+  log.debug(`Selected quality: "${selectedQuality}" -> "${quality}"`);
 
-  const options = [
-    "--format",
-    quality,
-    "--output",
-    "%(title)s.%(ext)s",
-    "--restrict-filenames", // Avoid special characters in filenames
-  ];
+  const options = ["--format", quality];
 
-  if (proxyURL != null) {
-    options.push("--proxy", proxyURL);
-  }
-  if (format !== "default") {
-    options.push("--merge-output-format", format);
-  }
-  options.push(URL);
+  if (proxyURL) options.push("--proxy", proxyURL);
 
-  log.debug("Final yt-dlp options:", options);
+  if (format !== "default") options.push("--merge-output-format", format);
+  
+  urls.map(item => options.push(item.url));
 
-  const { filePath, title } = await download(options);
-  log.debug("Download completed", { filePath, title });
+  log.debug("Final options:", options);
 
-  return { filePath, title };
+  return downloadContent(options);
 }
 
 initializeActor();
