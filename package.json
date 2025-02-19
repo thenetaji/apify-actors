@@ -9,20 +9,14 @@
   ],
   "scripts": {
     "test": "",
-    "format": "npx prettier . --write",
-    "build": "tsc"
+    "format": "npx prettier . --write"
   },
   "dependencies": {
     "apify": "^3.2.6",
-    "jest": "^29.7.0",
-    "user-agents": "^1.1.451",
-    "winston": "^3.17.0"
+    "jest": "^29.7.0"
   },
   "author": "thenetaji",
   "license": "MIT",
   "devDependencies": {
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.3"
   }
 }

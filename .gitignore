@@ -25,3 +25,4 @@ node_modules
 *.flac
 *.aac
 *.m4a
+*.opus

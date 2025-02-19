@@ -6,8 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "push": "cp -r ../shared ./ && apify push",
-    "test": "jest"
+    "push": "cp -r ../shared ./ && apify push"
   },
   "dependencies": {
     "apify": "^3.2.6",

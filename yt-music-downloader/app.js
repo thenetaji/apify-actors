@@ -1,96 +1,86 @@
-import { Actor,log } from "apify";
-import download from "./shared/download.js";
-import fs from "fs";
+import { Actor, log } from "apify";
+import downloadContent from "./shared/download.js";
+import {
+  initializeActorAndGetInput,
+  createProxyConfig,
+  saveFileToDB,
+} from "./shared/utils.js";
 
-export async function initializeActor() {
+async function initializeActor() {
   try {
-    log.info("Step 1/10: Initializing Actor...");
-    await Actor.init();
+    const inputValues = await initializeActorAndGetInput();
+    
+    /**
+     * @typedef {object} 
+     * @property {string} quality - audio quality eg. 360, 240 etc
+     * @property {string} format - whether to encode audio into different format eg. mp4, webm, mkv 
+     * @property {array} urls - [{url: "somerandomurls"}, {url: "samesamebutdifferent"}]
+     * @property {object} proxy
+     * @property {Boolean} proxy.useApifyProxy 
+     * @property {Array<string>} proxy.proxyGroup - ["RESIDENTIAL"] or ["DATACENTRE"] etc.
+     * @property {string} countryCode - proxy country to use
+     */
+    const {
+      quality,
+      format, //convert to another format eg. mp3, ogg
+      urls,
+      proxy: { useApifyProxy, apifyProxyGroups, countryCode },
+    } = inputValues;
 
-    log.info("Step 2/10: Retrieving input...");
-    const input = await Actor.getInput();
-    log.debug("Input retrieved:", input);
-
-    log.info("Step 3/10: Validating input...");
-    const requiredFields = ["url", "quality", "proxy", "convertToMp3"];
-    const missingFields = requiredFields.filter((field) => !input[field]);
-
-    if (missingFields.length > 0) {
-      const errorMessage = `Input validation error: Missing fields: ${missingFields.join(", ")}`;
-      log.error(errorMessage);
-      throw new Error(errorMessage);
+    if (!useApifyProxy && apifyProxyGroups != "RESIDENTIAL") {
+      throw new Error(
+        "The actor would not work with any other proxy except 'RESIDENTIAL'",
+      );
     }
 
-    const { url, quality, proxy, convertToMp3 } = input;
-    log.debug("Input validation passed", { url, quality, proxy, convertToMp3 });
+    const proxyUrl = await createProxyConfig(apifyProxyGroups, countryCode);
 
-    log.info("Step 4/10: Configuring proxy...");
-    const proxyConfig = await Actor.createProxyConfiguration({
-      groups: ["RESIDENTIAL"],
-    });
-    const proxyURL = await proxyConfig.newUrl();
-    log.info("Using residential proxy URL", { proxyURL });
-
-    log.info("Step 5/10: Starting download process...");
-    const { title, filePath } = await downloadYoutubeMusic(
-      url,
+    const downloadContent = await downloadYoutubeMusic(
+      urls,
       quality,
-      proxyURL,
-      convertToMp3,
+      format,
+      proxyUrl,
     );
-    log.debug("Download function returned", { title, filePath });
+    log.debug(`downloadContent function returned: ${JSON.stringify(downloadContent)}`);
+    await Actor.setStatusMessage("Download complete. Saving file...");
+    
+    const outputData = [];
+    
+    for (const item of downloadContent) {
+      const ext = item.ext;
+      const contentType = `audio/${ext}`;
+      
+      log.debug(`item of downloadContent: ${JSON.stringify(item)}`);
 
-    log.info("Step 6/10: Reading downloaded file...");
-    const fileBuffer = fs.readFileSync(filePath);
-    const extension = filePath.split(".").pop();
-    log.debug("File read successfully", { extension, filePath });
-
-    log.info("Step 7/10: Saving file to store...");
-    const keyValueStore = await Actor.openKeyValueStore();
-    const key = `${title}.${extension}`;
-    await keyValueStore.setValue(key, fileBuffer, {
-      contentType: `audio/${extension}`,
-    });
-
-    const publicUrl = `https://api.apify.com/v2/key-value-stores/${keyValueStore.id}/records/${encodeURIComponent(key)}`;
-    log.info("File saved to key-value store", { publicUrl });
-
-    log.info("Step 8/10: Pushing data to dataset...");
-    const outputData = {
-      publicUrl,
-      title,
-      fileName: `${title}.${extension}`,
-      timestamp: new Date().toISOString(),
-    };
-    await Actor.pushData(outputData);
-    log.debug("Data pushed to dataset", outputData);
-
-    log.info("Step 9/10: Saving output data...");
-    await Actor.setValue("OUTPUT", outputData);
-
-    log.info("Step 10/10: Updating status...");
-    await Actor.setStatusMessage(` Download URL: ${publicUrl}`);
-    await Actor.exit();
+      const saveFile = await saveFileToDB(item.fileTitle, item.filePath, contentType);
+      
+      outputData.push(saveFile);
+      await Actor.pushData({
+        title: saveFile.fileTitle,
+        downloadURL: saveFile.downloadUrl
+      });
+    }
+    await Actor.setStatusMessage("File saved successfully...");
+    log.debug(outputData);
+    
+    log.info(`Download Values: ${JSON.stringify(outputData, null, 2)}`);
+    
+    await Actor.exit("Download complete");
   } catch (error) {
-    log.error(`An error occurred during execution: ${error}`);
-    await Actor.exit(error, { status: 1 });
+    log.error(`An error occurred during execution: ${error.message}`);
+    await Actor.exit("An error occured", { timeoutSec: 0 });
   }
 }
 
-export async function downloadYoutubeMusic(
-  URL,
+async function downloadYoutubeMusic(
+  urls,
   selectedQuality = "best",
+  format = "default",
   proxyURL = null,
-  convertToMp3 = "default",
 ) {
-  log.debug("Preparing to download music...");
-  log.debug("Download parameters", {
-    URL,
-    selectedQuality,
-    proxyURL,
-    convertToMp3,
-  });
-
+  log.debug("Preparing to download video...");
+  log.debug("Download parameters", { urls, selectedQuality, proxyURL, format });
+  
   const qualityToCode = {
     64: 0,
     128: 5,
@@ -100,37 +90,24 @@ export async function downloadYoutubeMusic(
   };
 
   const quality = qualityToCode[selectedQuality];
-  if (!quality) {
-    const errorMessage =
-      "Format or quality not matched with the provided values";
-    log.error(errorMessage);
-    throw new Error(errorMessage);
-  }
-  log.debug(
-    `Selected audio quality: "${selectedQuality}" (mapped to "${quality}")`,
-  );
+  if (!quality) throw new Error("Invalid quality");
+
+  log.debug(`Selected quality: "${selectedQuality}" -> "${quality}"`);
 
   const options = [
     "--extract-audio",
-    "--audio-quality",
-    quality,
-    "--output",
-    "%(title)s.%(ext)s",
-    "--restrict-filenames", // Avoid special characters in the filename
-    "--proxy",
-    proxyURL,
-    URL,
-  ];
+    "--audio-quality", quality,
+    ];
 
-  if (convertToMp3 !== "default") {
-    options.push(`--audio-format,
-    ${convertToMp3}`);
-  }
+  if (proxyURL) options.push("--proxy", proxyURL);
 
-  const { filePath, title } = await download(options);
-  log.debug("Download completed", { filePath, title });
+  if (format !== "default") options.push("--merge-output-format", format);
+  
+  urls.map(item => options.push(item.url));
 
-  return { filePath, title };
+  log.debug("Final options:", options);
+
+  return downloadContent(options);
 }
 
 initializeActor();

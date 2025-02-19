@@ -1,6 +1,14 @@
 {
-  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "urls": [
+    {
+      "url": "https://youtube.com/shorts/CuC00GUDJsU?si=-ljhM2y1q_4ced1T"
+    }
+  ],
   "quality": "best",
-  "proxy": true,
-  "convertToMp3": "default"
+  "format": "default",
+  "proxy": {
+    "useApifyProxy": true,
+    "apifyProxyGroups": ["RESIDENTIAL"],
+    "countryCode": null
+  }
 }

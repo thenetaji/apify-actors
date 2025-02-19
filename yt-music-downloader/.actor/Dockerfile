@@ -5,7 +5,7 @@ RUN apk update -q && \
     apk add --no-cache -q python3 py3-pip ffmpeg && \
     python3 -m venv /opt/venv && \
     /opt/venv/bin/pip install --quiet --upgrade pip yt-dlp && \
-    rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/* /opt/venv/share/python-wheels/*
 
 # Update the PATH to include the virtual environment
 ENV PATH="/opt/venv/bin:$PATH"
@@ -17,7 +17,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install Node.js dependencies (without development dependencies)
-RUN npm install --omit=dev
+RUN npm install --omit=dev --silent
 COPY . .
 
 # Start the application
