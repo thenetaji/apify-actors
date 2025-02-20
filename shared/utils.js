@@ -42,14 +42,16 @@ export const createProxyConfig = async (type, country) => {
  * @param {string} contentType
  */
 export const saveFileToDB = async (fileTitle, filePath, contentType) => {
-  log.debug(`Actor params in saveFileToDB: fileTitle: ${fileTitle} & filePath: ${filePath}`);
-  
+  log.debug(
+    `Actor params in saveFileToDB: fileTitle: ${fileTitle} & filePath: ${filePath}`,
+  );
+
   const fileBuffer = await fs.readFile(filePath);
   const keyValueStore = await Actor.openKeyValueStore();
 
   await keyValueStore.setValue(fileTitle, fileBuffer, { contentType });
 
   const downloadUrl = `https://api.apify.com/v2/key-value-stores/${keyValueStore.id}/records/${encodeURIComponent(fileTitle)}`;
-  
+
   return { fileTitle, downloadUrl };
 };

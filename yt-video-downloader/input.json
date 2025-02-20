@@ -1,8 +1,8 @@
 {
   "urls": [
-    {"url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy"},
-    {"url": "https://youtube.com/shorts/6RaHrpLa_pE?si=PRwQv7zUMLwycFhJ"}
-    ],
+    { "url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy" },
+    { "url": "https://youtube.com/shorts/6RaHrpLa_pE?si=PRwQv7zUMLwycFhJ" }
+  ],
   "quality": "best",
   "format": "default"
 }

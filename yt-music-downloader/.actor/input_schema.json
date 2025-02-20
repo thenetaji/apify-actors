@@ -10,10 +10,10 @@
       "description": "The URL of the video to download",
       "editor": "requestListSources",
       "prefill": [
-        {"url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy"}
+        { "url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy" }
       ],
       "default": [
-        {"url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy"}
+        { "url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy" }
       ]
     },
     "quality": {
@@ -33,8 +33,28 @@
       "editor": "select",
       "default": "default",
       "prefill": "default",
-      "enum": ["default", "mp3", "webm", "opus", "ogg"],
-      "enumTitles": ["default", "mp3", "webm", "opus", "ogg"]
+      "enum": [
+        "default",
+        "aac",
+        "alac",
+        "flac",
+        "m4a",
+        "mp3",
+        "opus",
+        "vorbis",
+        "wav"
+      ],
+      "enumTitles": [
+        "default",
+        "aac",
+        "alac",
+        "flac",
+        "m4a",
+        "mp3",
+        "opus",
+        "vorbis",
+        "wav"
+      ]
     },
     "proxy": {
       "title": "Use proxy",

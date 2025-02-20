@@ -10,10 +10,10 @@
       "description": "The URL of the video to download",
       "editor": "requestListSources",
       "prefill": [
-        {"url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy"}
+        { "url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy" }
       ],
       "default": [
-        {"url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy"}
+        { "url": "https://youtube.com/shorts/8wst-04IuWI?si=KrYbYKtD7qnzH4Gy" }
       ]
     },
     "quality": {
