@@ -28,12 +28,13 @@ async function initializeActor() {
     } = inputValues;
 
     if (!useApifyProxy && apifyProxyGroups != "RESIDENTIAL") {
-      throw new Error(
+      log.error(
         "The actor would not work with any other proxy except 'RESIDENTIAL'",
       );
     }
 
     const proxyUrl = await createProxyConfig(apifyProxyGroups, countryCode);
+    log.info(`Using proxy type: ${apifyProxyGroups} with country: ${countryCode} and url: ${proxyUrl}`);
 
     const downloadContent = await downloadYoutubeVideo(
       urls,

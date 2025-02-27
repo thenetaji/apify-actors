@@ -6,8 +6,6 @@ import {
   saveFileToDB,
 } from "./shared/utils.js";
 
-log.setLevel(log.LEVELS.DEBUG);
-
 async function initializeActor() {
   try {
     const inputValues = await initializeActorAndGetInput();
@@ -21,28 +19,30 @@ async function initializeActor() {
      * @property {Boolean} proxy.useApifyProxy
      * @property {Array<string>} proxy.proxyGroup - ["RESIDENTIAL"] or ["DATACENTRE"] etc.
      * @property {string} countryCode - proxy country to use
+     * @property {Boolean} onlyMusic
      */
     const {
       quality,
-      format, //convert to another format eg. mp3, ogg
+      format,
       urls,
       proxy: { useApifyProxy, apifyProxyGroups, countryCode },
+      onlyMusic,
     } = inputValues;
 
     if (!useApifyProxy && apifyProxyGroups != "RESIDENTIAL") {
-      log.error(
+      throw new Error(
         "The actor would not work with any other proxy except 'RESIDENTIAL'",
       );
     }
 
     const proxyUrl = await createProxyConfig(apifyProxyGroups, countryCode);
-    log.info(`Using proxy type: ${apifyProxyGroups} with country: ${countryCode} and url: ${proxyUrl}`);
 
     const downloadContent = await downloadYoutubeMusic(
       urls,
       quality,
       format,
       proxyUrl,
+      onlyMusic,
     );
     log.debug(
       `downloadContent function returned: ${JSON.stringify(downloadContent)}`,
@@ -107,7 +107,7 @@ async function downloadYoutubeMusic(
 
   if (proxyURL) options.push("--proxy", proxyURL);
 
-  if (format !== "default") options.push("--audio-format", format);
+  if (format !== "default") options.push("--merge-output-format", format);
 
   urls.map((item) => options.push(item.url));
 

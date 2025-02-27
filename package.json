@@ -8,14 +8,13 @@
     "/shared/*"
   ],
   "scripts": {
-    "test": "",
     "format": "npx prettier . --write"
   },
   "dependencies": {
-    "apify": "^3.2.6",
-    "jest": "^29.7.0"
+    "apify": "^3.2.6"
   },
   "author": "thenetaji",
   "license": "MIT",
-  "devDependencies": {}
+  "devDependencies": {
+  }
 }
