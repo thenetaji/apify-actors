@@ -9,49 +9,18 @@
       "type": "array",
       "description": "The URL of the video to download",
       "editor": "requestListSources",
-      "prefill": [
-        { "url": "https://vt.tiktok.com/ZSMy827Qe/" }
-      ],
-      "default": [
-        { "url": "https://vt.tiktok.com/ZSMy827Qe/" }
-      ]
-    },
-    "quality": {
-      "title": "Select quality",
-      "description": "Select video quality to download",
-      "type": "string",
-      "editor": "select",
-      "default": "best",
-      "prefill": "best",
-      "enum": [
-        "best",
-        "worst"
-      ],
-      "enumTitles": [
-        "best (recommended)",
-        "worst"
-      ]
-    },
-    "format": {
-      "title": "Select file type (can be slow)",
-      "description": "Select video file type (.mp4, .mkv, .webm)",
-      "type": "string",
-      "editor": "select",
-      "default": "default",
-      "prefill": "default",
-      "enum": ["default", "mp4", "webm", "mkv"],
-      "enumTitles": ["default", "mp4", "webm", "mkv"]
+      "prefill": [{ "url": "https://vt.tiktok.com/ZSMy827Qe/" }],
+      "default": [{ "url": "https://vt.tiktok.com/ZSMy827Qe/" }]
     },
     "proxy": {
       "title": "Use proxy",
       "type": "object",
       "editor": "proxy",
-      "description": "Enable proxy for downloading, only residential proxy would be used as others don't work",
+      "description": "Enable proxy for downloading, if it doesn't work",
       "default": {
-        "useApifyProxy": true,
-        "apifyProxyGroups": ["RESIDENTIAL"]
+        "useApifyProxy": false
       }
     }
   },
-  "required": ["urls", "proxy", "format", "quality"]
+  "required": ["urls"]
 }

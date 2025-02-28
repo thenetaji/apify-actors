@@ -1,12 +1,12 @@
 import { Actor, log } from "apify";
-import downloadContent from "./shared/download.js";
+import { getDirectUrl } from "./shared/download.js";
 import {
   initializeActorAndGetInput,
   createProxyConfig,
   saveFileToDB,
 } from "./shared/utils.js";
 
-log.setLevel(log.LEVELS.DEBUG)
+//log.setLevel(log.LEVELS.DEBUG);
 
 async function initializeActor() {
   try {
@@ -14,65 +14,43 @@ async function initializeActor() {
 
     /**
      * @typedef {object}
-     * @property {string} quality - video quality eg. 360, 240 etc
-     * @property {string} format - whether to encode video into different format eg. mp4, webm, mkv
      * @property {array} urls - [{url: "somerandomurls"}, {url: "samesamebutdifferent"}]
      * @property {object} proxy
      * @property {Boolean} proxy.useApifyProxy
      * @property {Array<string>} proxy.proxyGroup - ["RESIDENTIAL"] or ["DATACENTRE"] etc.
      * @property {string} countryCode - proxy country to use
      */
+    log.debug(`input received: ${inputValues}`);
     const {
-      quality,
-      format,
       urls,
       proxy: { useApifyProxy, apifyProxyGroups, countryCode },
     } = inputValues;
 
-    if (!useApifyProxy && apifyProxyGroups != "RESIDENTIAL") {
-      log.error(
-        "The actor would not work with any other proxy except 'RESIDENTIAL'",
+    let proxyUrl;
+    if (useApifyProxy) {
+      proxyUrl = await createProxyConfig(apifyProxyGroups, countryCode);
+      log.info(
+        `Using proxy type: ${apifyProxyGroups} with country: ${countryCode} and url: ${proxyUrl}`,
       );
     }
 
-    const proxyUrl = await createProxyConfig(apifyProxyGroups, countryCode);
-    log.info(`Using proxy type: ${apifyProxyGroups} with country: ${countryCode} and url: ${proxyUrl}`);
-
-    const downloadContent = await downloadYoutubeVideo(
-      urls,
-      quality,
-      format,
-      proxyUrl,
-    );
+    const downloadContent = await getDirectVideoURL(urls, proxyUrl);
     log.debug(
       `downloadContent function returned: ${JSON.stringify(downloadContent)}`,
     );
     await Actor.setStatusMessage("Download complete. Saving file...");
 
-    const outputData = [];
-
     for (const item of downloadContent) {
-      const ext = item.ext;
-      const contentType = `video/${ext}`;
-
       log.debug(`item of downloadContent: ${JSON.stringify(item)}`);
 
-      const saveFile = await saveFileToDB(
-        item.fileTitle,
-        item.filePath,
-        contentType,
-      );
-
-      outputData.push(saveFile);
       await Actor.pushData({
-        title: saveFile.fileTitle,
-        downloadURL: saveFile.downloadUrl,
+        title: item.fileTitle,
+        downloadURL: item.downloadUrl,
       });
     }
     await Actor.setStatusMessage("File saved successfully...");
-    log.debug(outputData);
-
-    log.info(`Download Values: ${JSON.stringify(outputData, null, 2)}`);
+    
+    log.info(`DOWNLOAD URLS: ${JSON.stringify(downloadContent, null, 2)}`);
 
     await Actor.exit("Download complete");
   } catch (error) {
@@ -81,26 +59,24 @@ async function initializeActor() {
   }
 }
 
-async function downloadYoutubeVideo(
-  urls,
-  selectedQuality = "best",
-  format = "default",
-  proxyURL = null,
-) {
+async function getDirectVideoURL(urls, proxyURL = null) {
   log.debug("Preparing to download video...");
-  log.debug("Download parameters", { urls, selectedQuality, proxyURL, format });
+  log.debug("Download parameters", { urls, proxyURL });
 
-  const options = ["--format", selectedQuality];
+  const options = [
+    "-g", 
+    "--get-title",
+    "--skip-download",
+    "--no-check-certificate"
+    ];
 
   if (proxyURL) options.push("--proxy", proxyURL);
-
-  if (format !== "default") options.push("--merge-output-format", format);
 
   urls.map((item) => options.push(item.url));
 
   log.debug("Final options:", options);
 
-  return downloadContent(options);
+  return getDirectUrl(options);
 }
 
 initializeActor();

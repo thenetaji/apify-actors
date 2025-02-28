@@ -55,9 +55,7 @@ The output of this actor will be a JSON object containing the download links of 
 
 ```json
 {
-  "videoUrls": [
-    "https://www.tiktok.com/@example/video/1234567890"
-  ]
+  "videoUrls": ["https://www.tiktok.com/@example/video/1234567890"]
 }
 ```
 
