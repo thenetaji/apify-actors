@@ -4,5 +4,6 @@
     { "url": "https://youtube.com/shorts/6RaHrpLa_pE?si=PRwQv7zUMLwycFhJ" }
   ],
   "quality": "best",
-  "format": "default"
+  "format": "default",
+  "test": "true"
 }

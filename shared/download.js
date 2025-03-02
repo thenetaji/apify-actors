@@ -44,18 +44,21 @@ async function tryDownload(options, client) {
           const filePathString = line.replace("FINAL_FILE:", "").trim();
 
           // Extract filename and extension
-          const fileName = path    .basename(filePathString)
-    .replace(/_/g, " ") // Replace underscores with spaces
-    .replace(/\s*-\s*/g, " - ") // Ensure proper spacing around hyphens
-    .replace(/\s+/g, " ") // Remove extra spaces
-    .trim() // Trim leading and trailing spaces
-    .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize each word
-    .replace(/[^a-zA-Z0-9!_.()'-]/g, "_") // Replace disallowed characters with "_"
-    .slice(0, 256); // Ensure max length
+          const fileName = path
+            .basename(filePathString)
+            .replace(/_/g, " ") // Replace underscores with spaces
+            .replace(/\s*-\s*/g, " - ") // Ensure proper spacing around hyphens
+            .replace(/\s+/g, " ") // Remove extra spaces
+            .trim() // Trim leading and trailing spaces
+            .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize each word
+            .replace(/[^a-zA-Z0-9!_.()'-]/g, "_") // Replace disallowed characters with "_"
+            .slice(0, 256); // Ensure max length
           const ext = path.extname(fileName);
           const fileTitle = fileName.replace(ext, ""); // Remove extension
-          
-          log.debug(`Data being pushed to download array: fileTitle: ${fileTitle}, ext: ${ext}, filePath: ${filePathString}`);
+
+          log.debug(
+            `Data being pushed to download array: fileTitle: ${fileTitle}, ext: ${ext}, filePath: ${filePathString}`,
+          );
           downloadData.push({ fileTitle, ext, filePath: filePathString });
 
           log.debug(`Download array: ${JSON.stringify(downloadData)}`);
@@ -76,7 +79,9 @@ async function tryDownload(options, client) {
     shell.on("close", (code) => {
       if (code === 0) {
         log.debug("yt-dlp process exited successfully.");
-        log.debug(`Download array passed to resolve: ${JSON.stringify(downloadData)}`);
+        log.debug(
+          `Download array passed to resolve: ${JSON.stringify(downloadData)}`,
+        );
         resolve(downloadData);
       } else {
         log.error(`yt-dlp process failed with code ${code}. Error: ${stderr}`);
@@ -107,8 +112,10 @@ async function tryDownload(options, client) {
  * ]
  */
 async function downloadContent(options) {
-  log.debug(`Data passed to downloadContent function: ${JSON.stringify(options)}`);
-  
+  log.debug(
+    `Data passed to downloadContent function: ${JSON.stringify(options)}`,
+  );
+
   if (!Array.isArray(options) || options.length === 0) {
     throw new Error("No URLs provided for download.");
   }
@@ -129,6 +136,52 @@ async function downloadContent(options) {
   }
 
   throw new Error("All extraction methods failed.");
+}
+
+export async function getDirectUrl(options) {
+  return new Promise((resolve, reject) => {
+    const shell = spawn("yt-dlp", options);
+    let stderr = "";
+    const downloadData = [];
+
+    shell.stdout.on("data", (data) => {
+      const output = data.toString().trim();
+      log.info(`Stdout received: ${output}`);
+
+      let title = "";
+      output.split("\n").forEach((item) => {
+        if (item.startsWith("http")) {
+          downloadData.push({
+            title: title.trim(),
+            downloadUrl: item.trim(),
+          });
+          title = "";
+        } else {
+          title = item;
+        }
+      });
+    });
+
+    shell.stderr.on("data", (data) => {
+      stderr += data.toString();
+      log.error(`Stderr received: ${stderr}`);
+    });
+
+    shell.on("error", (err) => {
+      log.error("Failed to start yt-dlp process", err);
+      reject(new Error("Failed to start process. Please try again."));
+    });
+
+    shell.on("close", (code) => {
+      if (code === 0) {
+        log.debug("yt-dlp process exited successfully.");
+        resolve(downloadData);
+      } else {
+        log.error(`yt-dlp process failed with code ${code}. Error: ${stderr}`);
+        reject(new Error(`Process failed with code ${code}.`));
+      }
+    });
+  });
 }
 
 export default downloadContent;

@@ -36,3 +36,8 @@ export class DatabaseError extends CustomError {
     super("Database operation failed", details);
   }
 }
+
+export class InitializationError extends CustomError {}
+export class ProxyConfigError extends CustomError {}
+export class DataProcessingError extends CustomError {}
+export class SaveFileError extends CustomError {}

@@ -8,74 +8,75 @@ import {
 
 async function initializeActor() {
   try {
+    log.info("Initializing actor...");
     const inputValues = await initializeActorAndGetInput();
+    log.debug("Received input values", inputValues);
 
-    /**
-     * @typedef {object}
-     * @property {string} quality - video quality eg. 360, 240 etc
-     * @property {string} format - whether to encode video into different format eg. mp4, webm, mkv
-     * @property {array} urls - [{url: "somerandomurls"}, {url: "samesamebutdifferent"}]
-     * @property {object} proxy
-     * @property {Boolean} proxy.useApifyProxy
-     * @property {Array<string>} proxy.proxyGroup - ["RESIDENTIAL"] or ["DATACENTRE"] etc.
-     * @property {string} countryCode - proxy country to use
-     */
     const {
       quality,
       format,
       urls,
       proxy: { useApifyProxy, apifyProxyGroups, countryCode },
+      concurrency,
+      test,
     } = inputValues;
 
-    if (!useApifyProxy && apifyProxyGroups != "RESIDENTIAL") {
+    if (!useApifyProxy || (apifyProxyGroups !== "RESIDENTIAL" && !test)) {
       log.error(
-        "The actor would not work with any other proxy except 'RESIDENTIAL'",
+        "The actor only works with 'RESIDENTIAL' proxies. Execution halted.",
       );
+      await Actor.exit("Invalid proxy configuration", { timeoutSec: 0 });
+      return;
     }
 
     const proxyUrl = await createProxyConfig(apifyProxyGroups, countryCode);
-    log.info(`Using proxy type: ${apifyProxyGroups} with country: ${countryCode} and url: ${proxyUrl}`);
+    log.info(
+      `Using proxy: ${apifyProxyGroups}, country: ${countryCode}, URL: ${proxyUrl}`,
+    );
 
-    const downloadContent = await downloadYoutubeVideo(
+    const downloadResults = await downloadYoutubeVideo(
       urls,
       quality,
       format,
       proxyUrl,
     );
-    log.debug(
-      `downloadContent function returned: ${JSON.stringify(downloadContent)}`,
-    );
-    await Actor.setStatusMessage("Download complete. Saving file...");
+
+    log.debug("Download results", downloadResults);
+    await Actor.setStatusMessage("Download complete. Saving files...");
 
     const outputData = [];
 
-    for (const item of downloadContent) {
-      const ext = item.ext;
-      const contentType = `video/${ext}`;
+    for (const item of downloadResults) {
+      try {
+        const contentType = `video/${item.ext}`;
+        log.debug(
+          `Saving file: ${item.fileTitle}, Content-Type: ${contentType}`,
+        );
 
-      log.debug(`item of downloadContent: ${JSON.stringify(item)}`);
+        const savedFile = await saveFileToDB(
+          item.fileTitle,
+          item.filePath,
+          contentType,
+        );
 
-      const saveFile = await saveFileToDB(
-        item.fileTitle,
-        item.filePath,
-        contentType,
-      );
-
-      outputData.push(saveFile);
-      await Actor.pushData({
-        title: saveFile.fileTitle,
-        downloadURL: saveFile.downloadUrl,
-      });
+        outputData.push(savedFile);
+        await Actor.pushData({
+          title: savedFile.fileTitle,
+          downloadURL: savedFile.downloadUrl,
+        });
+      } catch (saveError) {
+        log.error(`Error saving file ${item.fileTitle}: ${saveError.message}`, {
+          stack: saveError.stack,
+        });
+      }
     }
-    await Actor.setStatusMessage("File saved successfully...");
-    log.debug(outputData);
 
-    log.info(`Download Values: ${JSON.stringify(outputData, null, 2)}`);
-
+    log.info(`Final output data: ${JSON.stringify(outputData, null, 2)}`);
+    await Actor.setStatusMessage("File saving complete.");
     await Actor.exit("Download complete");
   } catch (error) {
-    log.error(`An error occurred during execution: ${error.message}`);
-    await Actor.exit("An error occured", { timeoutSec: 0 });
+    log.error(`Execution error: ${error.message}`, { stack: error.stack });
+    await Actor.exit("Execution failed", { timeoutSec: 0 });
   }
 }
 
@@ -84,36 +85,47 @@ async function downloadYoutubeVideo(
   selectedQuality = "360",
   format = "default",
   proxyURL = null,
+  concurrency = 5
 ) {
-  log.debug("Preparing to download video...");
-  log.debug("Download parameters", { urls, selectedQuality, proxyURL, format });
+  try {
+    log.debug("Preparing to download video...");
+    log.debug("Download parameters", {
+      urls,
+      selectedQuality,
+      proxyURL,
+      format,
+    });
 
-  const qualityToCode = {
-    144: "bestvideo[height<=144]+bestaudio/best",
-    240: "bestvideo[height<=240]+bestaudio/best",
-    360: "bestvideo[height<=360]+bestaudio/best",
-    480: "bestvideo[height<=480]+bestaudio/best",
-    720: "bestvideo[height<=720]+bestaudio/best",
-    1080: "bestvideo[height<=1080]+bestaudio/best",
-    best: "bestvideo+bestaudio",
-  };
+    const qualityToCode = {
+      144: "bestvideo[height<=144]+bestaudio/bestvideo[height<=144]/best",
+      240: "bestvideo[height<=240]+bestaudio/bestvideo[height<=240]/best",
+      360: "bestvideo[height<=360]+bestaudio/bestvideo[height<=360]/best",
+      480: "bestvideo[height<=480]+bestaudio/bestvideo[height<=480]/best",
+      720: "bestvideo[height<=720]+bestaudio/bestvideo[height<=720]/best",
+      1080: "bestvideo[height<=1080]+bestaudio/bestvideo[height<=1080]/best",
+      best: "bestvideo+bestaudio/best",
+    };
 
-  const quality = qualityToCode[selectedQuality];
-  if (!quality) throw new Error("Invalid quality");
+    const quality = qualityToCode[selectedQuality];
+    if (!quality) throw new Error(`Invalid quality: ${selectedQuality}`);
 
-  log.debug(`Selected quality: "${selectedQuality}" -> "${quality}"`);
+    log.debug(`Using quality: "${selectedQuality}" -> "${quality}"`);
 
-  const options = ["--format", quality];
+    const options = ["--format", quality];
+    if (proxyURL) options.push("--proxy", proxyURL);
+    if (format !== "default") options.push("--merge-output-format", format);
+    if(concurrency) options.push("--concurrent-fragments", concurrency);
 
-  if (proxyURL) options.push("--proxy", proxyURL);
+    urls.map((item) => options.push(item.url));
+    log.debug("Final yt-dlp options", options);
 
-  if (format !== "default") options.push("--merge-output-format", format);
-
-  urls.map((item) => options.push(item.url));
-
-  log.debug("Final options:", options);
-
-  return downloadContent(options);
+    return await downloadContent(options);
+  } catch (error) {
+    log.error(`Error in downloadYoutubeVideo: ${error.message}`, {
+      stack: error.stack,
+    });
+    throw error;
+  }
 }
 
 initializeActor();
