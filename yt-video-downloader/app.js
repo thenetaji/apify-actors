@@ -39,6 +39,7 @@ async function initializeActor() {
       quality,
       format,
       proxyUrl,
+      concurrency,
     );
 
     log.debug("Download results", downloadResults);
