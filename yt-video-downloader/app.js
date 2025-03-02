@@ -16,12 +16,12 @@ async function initializeActor() {
       quality,
       format,
       urls,
-      proxy: { useApifyProxy, apifyProxyGroups, countryCode },
+      proxy: { useApifyProxy, apifyProxyGroups, apifyProxyCountry },
       concurrency,
       test,
     } = inputValues;
 
-    if (!useApifyProxy || (apifyProxyGroups !== "RESIDENTIAL" && !test)) {
+    if (useApifyProxy == false) {
       log.error(
         "The actor only works with 'RESIDENTIAL' proxies. Execution halted.",
       );
@@ -29,9 +29,9 @@ async function initializeActor() {
       return;
     }
 
-    const proxyUrl = await createProxyConfig(apifyProxyGroups, countryCode);
+    const proxyUrl = await createProxyConfig(apifyProxyGroups, apifyProxyCountry);
     log.info(
-      `Using proxy: ${apifyProxyGroups}, country: ${countryCode}, URL: ${proxyUrl}`,
+      `Using proxy: ${apifyProxyGroups}, country: ${apifyProxyCountry}, URL: ${proxyUrl}`,
     );
 
     const downloadResults = await downloadYoutubeVideo(

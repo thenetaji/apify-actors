@@ -1,0 +1,75 @@
+{
+  "actorSpecification": 1,
+  "views": {
+    "postView": {
+      "title": "Posts",
+      "transformation": {
+        "fields": [
+          "videoId", "description", "createTime", "videoUrl",
+          "coverImage", "bitrate", "quality", "format",
+          "authorId", "authorUsername", "authorNickname",
+          "authorVerified", "musicId", "musicTitle",
+          "musicUrl", "likes", "shares", "comments", "plays"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "videoId": { "label": "Video ID", "format": "text" },
+          "description": { "label": "Description", "format": "text" },
+          "createTime": { "label": "Created At", "format": "datetime" },
+          "videoUrl": { "label": "Video URL", "format": "link" },
+          "coverImage": { "label": "Cover Image", "format": "image" },
+          "bitrate": { "label": "Bitrate", "format": "number" },
+          "quality": { "label": "Quality", "format": "text" },
+          "format": { "label": "Format", "format": "text" },
+          "authorId": { "label": "Author ID", "format": "text" },
+          "authorUsername": { "label": "Author Username", "format": "text" },
+          "authorNickname": { "label": "Author Nickname", "format": "text" },
+          "authorVerified": { "label": "Verified", "format": "boolean" },
+          "musicId": { "label": "Music ID", "format": "text" },
+          "musicTitle": { "label": "Music Title", "format": "text" },
+          "musicUrl": { "label": "Music URL", "format": "link" },
+          "likes": { "label": "Likes", "format": "number" },
+          "shares": { "label": "Shares", "format": "number" },
+          "comments": { "label": "Comments", "format": "number" },
+          "plays": { "label": "Plays", "format": "number" }
+        }
+      }
+    },
+    "profileView": {
+      "title": "Profiles",
+      "transformation": {
+        "fields": [
+          "userId", "uniqueId", "nickname", "title", "description",
+          "avatarLarge", "avatarMedium", "avatarThumb", "bioSignature",
+          "bioLink", "createdAt", "verified", "region",
+          "privateAccount", "followers", "following", "likes", "videos"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "userId": { "label": "User ID", "format": "text" },
+          "uniqueId": { "label": "Unique ID", "format": "text" },
+          "nickname": { "label": "Nickname", "format": "text" },
+          "title": { "label": "Title", "format": "text" },
+          "description": { "label": "Description", "format": "text" },
+          "avatarLarge": { "label": "Avatar (Large)", "format": "image" },
+          "avatarMedium": { "label": "Avatar (Medium)", "format": "image" },
+          "avatarThumb": { "label": "Avatar (Thumb)", "format": "image" },
+          "bioSignature": { "label": "Bio Signature", "format": "text" },
+          "bioLink": { "label": "Bio Link", "format": "link" },
+          "createdAt": { "label": "Account Created", "format": "datetime" },
+          "verified": { "label": "Verified", "format": "boolean" },
+          "region": { "label": "Region", "format": "text" },
+          "privateAccount": { "label": "Private Account", "format": "boolean" },
+          "followers": { "label": "Followers", "format": "number" },
+          "following": { "label": "Following", "format": "number" },
+          "likes": { "label": "Likes", "format": "number" },
+          "videos": { "label": "Videos", "format": "number" }
+        }
+      }
+    }
+  }
+}

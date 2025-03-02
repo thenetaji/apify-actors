@@ -4,13 +4,12 @@ import UserAgent from "user-agents";
 import path from "path";
 
 /**
- * Attempts to download the content using yt-dlp with the specified player client.
+ * Attempts to download the content using yt-dlp.
  * @param {Array} options - The array of URLs to download.
- * @param {string} client - The YouTube player client to use (e.g., web, ios, tvhtml5).
  * @returns {Promise<Array>} - Resolves with an array of downloaded files.
  */
-async function tryDownload(options, client) {
-  log.debug(`Trying download with client: ${client}`);
+async function tryDownload(options) {
+  log.debug(`Starting yt-dlp download`);
 
   const agent = new UserAgent().toString();
   const configs = [
@@ -18,10 +17,6 @@ async function tryDownload(options, client) {
     agent,
     "--no-warning",
     "--no-check-certificate",
-    "--extractor-args",
-    `youtube:player_client=${client}`, // Dynamic client selection
-    "--concurrent-fragments",
-    5,
     "--output",
     "%(title)s.%(ext)s",
     "--restrict-filenames",
@@ -92,29 +87,13 @@ async function tryDownload(options, client) {
 }
 
 /**
- * Attempts to download a list of URLs using different player clients as fallback options.
+ * Attempts to download a list of URLs.
  * @param {Array} options - The array of URLs to download.
  * @returns {Promise<Array>} - Resolves with an array of downloaded files.
- * @throws {Error} - If all extraction methods fail.
- *
- * Example return value:
- * [
- *   {
- *     title: "Bad_news_for_Mukesh_Ambani_as_Delhi_HC_quashes_award_in_KG_basin_gas_dispute_worth_1.7_billion",
- *     ext: ".webm",
- *     filePath: "/data/data/com.termux/files/home/apify-actors/shared/Bad_news_for_Mukesh_Ambani_as_Delhi_HC_quashes_award_in_KG_basin_gas_dispute_worth_1.7_billion.webm"
- *   },
- *   {
- *     title: "kattar_hindu_status_bajrang_dal_shorts_bajrangdal_kattarhindu_hindutva",
- *     ext: ".webm",
- *     filePath: "/data/data/com.termux/files/home/apify-actors/shared/kattar_hindu_status_bajrang_dal_shorts_bajrangdal_kattarhindu_hindutva.webm"
- *   }
- * ]
+ * @throws {Error} - If extraction fails.
  */
 async function downloadContent(options) {
-  log.debug(
-    `Data passed to downloadContent function: ${JSON.stringify(options)}`,
-  );
+  log.debug(`Data passed to downloadContent function: ${JSON.stringify(options)}`);
 
   if (!Array.isArray(options) || options.length === 0) {
     throw new Error("No URLs provided for download.");
@@ -122,22 +101,19 @@ async function downloadContent(options) {
 
   log.debug("Starting download:", options);
 
-  // List of player clients to try, in order of preference
-  const clients = ["web", "ios", "tvhtml5"];
-
-  for (const client of clients) {
-    try {
-      log.debug(`Trying with player client: ${client}`);
-      const result = await tryDownload(options, client);
-      if (result.length > 0) return result; // Return on first success
-    } catch (err) {
-      log.warning(`Failed with client ${client}, trying next...`);
-    }
+  try {
+    return await tryDownload(options);
+  } catch (err) {
+    log.error("Download failed", err);
+    throw new Error("Download failed.");
   }
-
-  throw new Error("All extraction methods failed.");
 }
 
+/**
+ * Extracts the direct download URL.
+ * @param {Array} options - The yt-dlp options.
+ * @returns {Promise<Array>} - Resolves with an array of objects containing title and URL.
+ */
 export async function getDirectUrl(options) {
   return new Promise((resolve, reject) => {
     const shell = spawn("yt-dlp", options);
