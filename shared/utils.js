@@ -1,6 +1,6 @@
 import { Actor, log } from "apify";
 import fs from "fs/promises";
-import download from "../shared/download.js";
+import download from "./shared/download.js";
 
 /**
  * @return {Promise<string>} input - The input entered through apify console
@@ -55,3 +55,26 @@ export const saveFileToDB = async (fileTitle, filePath, contentType) => {
 
   return { fileTitle, downloadUrl };
 };
+
+
+export function detectTikTokType(url) {
+  const urlObj = new URL(url);
+  
+  // If it's a short URL, assume it's a video post
+  if (urlObj.hostname === "vt.tiktok.com") {
+    return "post"; 
+  }
+
+  // Check the pathname structure
+  const pathParts = urlObj.pathname.split("/").filter(Boolean);
+  
+  if (pathParts.length === 1 && pathParts[0].startsWith("@")) {
+    return "profile"; // Profile URL
+  }
+  
+  if (pathParts.length === 3 && pathParts[1] === "video") {
+    return "post"; // Video URL
+  }
+
+  return "unknown"; // Unexpected URL format
+}

@@ -12,16 +12,6 @@
       "prefill": [{ "url": "https://vt.tiktok.com/ZSMy827Qe/" }],
       "default": [{ "url": "https://vt.tiktok.com/ZSMy827Qe/" }]
     },
-    "type": {
-      "title": "Select type of scraping",
-      "description": "Select type of scraping you need to perform",
-      "type": "string",
-      "editor": "select",
-      "default": "post",
-      "prefill": "post",
-      "enum": ["post", "profile"],
-      "enumTitles": ["post", "profile"]
-    },
     "proxy": {
       "title": "Use proxy",
       "type": "object",
