@@ -9,18 +9,25 @@
       "type": "array",
       "description": "The URL of the post or user profile to scrape",
       "editor": "requestListSources",
-      "prefill": [{ "url": "https://vt.tiktok.com/ZSMy827Qe/" }],
-      "default": [{ "url": "https://vt.tiktok.com/ZSMy827Qe/" }]
+      "prefill": [
+        { "url": "https://www.tiktok.com/@addisonre" },
+        { "url": "https://vt.tiktok.com/ZSMy827Qe/" },
+        { "url": "https://www.tiktok.com/@khaby.lame" }
+        ],
+      "default": [
+        { "url": "https://www.tiktok.com/@addisonre" },
+        { "url": "https://vt.tiktok.com/ZSMy827Qe/" },
+        { "url": "https://www.tiktok.com/@khaby.lame" }]
     },
     "proxy": {
       "title": "Use proxy",
       "type": "object",
       "editor": "proxy",
-      "description": "Enable proxy for downloading, only residential proxy would be used as others don't work",
+      "description": "Enable proxy for scraping, use residential for highest success rate",
       "default": {
         "useApifyProxy": false
       }
     }
   },
-  "required": ["urls", "type"]
+  "required": ["urls"]
 }

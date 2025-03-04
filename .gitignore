@@ -27,3 +27,6 @@ package-lock.json
 *.aac
 *.m4a
 *.opus
+
+# random
+*.zip
