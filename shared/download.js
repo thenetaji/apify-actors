@@ -32,6 +32,10 @@ async function tryDownload(options) {
 
     shell.stdout.on("data", (data) => {
       const output = data.toString().trim();
+      if (output.trim() == "") {
+        log.info("-----------------------");
+        return;
+      }
       log.info(`Stdout received: ${output}`);
 
       output.split("\n").forEach((line) => {
@@ -93,7 +97,9 @@ async function tryDownload(options) {
  * @throws {Error} - If extraction fails.
  */
 async function downloadContent(options) {
-  log.debug(`Data passed to downloadContent function: ${JSON.stringify(options)}`);
+  log.debug(
+    `Data passed to downloadContent function: ${JSON.stringify(options)}`,
+  );
 
   if (!Array.isArray(options) || options.length === 0) {
     throw new Error("No URLs provided for download.");

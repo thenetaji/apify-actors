@@ -43,12 +43,11 @@
       "title": "Use proxy",
       "type": "object",
       "editor": "proxy",
-      "description": "Enable proxy for downloading, only residential proxy would be used as others don't work",
+      "description": "Enable proxy for downloading if it fails without it",
       "default": {
-        "useApifyProxy": true,
-        "apifyProxyGroups": ["RESIDENTIAL"]
+        "useApifyProxy": false
       }
     }
   },
-  "required": ["urls", "proxy", "format", "quality"]
+  "required": ["urls", "format", "quality"]
 }

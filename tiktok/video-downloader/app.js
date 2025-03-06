@@ -6,13 +6,17 @@ import {
   saveFileToDB,
 } from "./shared/utils.js";
 
-//log.setLevel(log.LEVELS.DEBUG);
+if (process.env.NODE_ENV == "production") {
+  log.setLevel(log.LEVELS.INFO);
+} else {
+  log.setLevel(log.LEVELS.DEBUG);
+}
 
 async function initializeActor() {
   try {
     log.info("Initializing actor...");
     const inputValues = await initializeActorAndGetInput();
-    log.debug(`Received input: ${JSON.stringify(inputValues, null, 2)}`);
+    log.info(`Received input: ${JSON.stringify(inputValues, null, 2)}`);
 
     /**
      * @typedef {object}
@@ -34,19 +38,17 @@ async function initializeActor() {
     } = inputValues;
 
     if (useApifyProxy == false) {
-      log.warn(
-        "The actor is configured to work only with 'RESIDENTIAL' proxy. Other proxies may not work correctly.",
-      );
+      log.warning("Use proxy if the download fails");
     }
 
-    log.info("Creating proxy configuration...");
-    const proxyUrl = await createProxyConfig(
-      apifyProxyGroups,
-      apifyProxyCountry,
-    );
-    log.info(
-      `Using proxy: ${proxyUrl} | Type: ${apifyProxyGroups} | Country: ${apifyProxyCountry}`,
-    );
+    let proxyUrl;
+    if (useApifyProxy) {
+      log.info("Creating proxy configuration...");
+      proxyUrl = await createProxyConfig(apifyProxyGroups, apifyProxyCountry);
+      log.info(
+        `Using proxy: ${proxyUrl} | Type: ${apifyProxyGroups} | Country: ${apifyProxyCountry}`,
+      );
+    }
 
     log.info("Starting video download process...");
     const downloadedContent = await downloadYoutubeVideo(
@@ -93,7 +95,7 @@ async function initializeActor() {
   } catch (error) {
     log.error(`Execution error: ${error.message}`);
     log.debug(`Error details: ${error.stack}`);
-    await Actor.exit("An error occurred", { timeoutSec: 0 });
+    await Actor.fail("An error occurred", { timeoutSec: 0 });
   }
 }
 
@@ -112,7 +114,10 @@ async function downloadYoutubeVideo(
     proxyURL,
   });
 
-  const options = ["--format", selectedQuality];
+  const options = [
+    "--format", selectedQuality,
+    "--fragment-retries", 3,
+    "--retries", 2];
 
   if (proxyURL) {
     log.info(`Using proxy for download: ${proxyURL}`);
