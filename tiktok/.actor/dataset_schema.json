@@ -5,11 +5,25 @@
       "title": "Posts",
       "transformation": {
         "fields": [
-          "videoId", "description", "createTime", "videoUrl",
-          "coverImage", "bitrate", "quality", "format",
-          "authorId", "authorUsername", "authorNickname",
-          "authorVerified", "musicId", "musicTitle",
-          "musicUrl", "likes", "shares", "comments", "plays"
+          "videoId",
+          "description",
+          "createTime",
+          "videoUrl",
+          "coverImage",
+          "bitrate",
+          "quality",
+          "format",
+          "authorId",
+          "authorUsername",
+          "authorNickname",
+          "authorVerified",
+          "musicId",
+          "musicTitle",
+          "musicUrl",
+          "likes",
+          "shares",
+          "comments",
+          "plays"
         ]
       },
       "display": {
@@ -41,10 +55,24 @@
       "title": "Profiles",
       "transformation": {
         "fields": [
-          "userId", "uniqueId", "nickname", "title", "description",
-          "avatarLarge", "avatarMedium", "avatarThumb", "bioSignature",
-          "bioLink", "createdAt", "verified", "region",
-          "privateAccount", "followers", "following", "likes", "videos"
+          "userId",
+          "uniqueId",
+          "nickname",
+          "title",
+          "description",
+          "avatarLarge",
+          "avatarMedium",
+          "avatarThumb",
+          "bioSignature",
+          "bioLink",
+          "createdAt",
+          "verified",
+          "region",
+          "privateAccount",
+          "followers",
+          "following",
+          "likes",
+          "videos"
         ]
       },
       "display": {

@@ -11,7 +11,11 @@ import {
   DataProcessingError,
 } from "./shared/error.js";
 
-//log.setLevel(log.LEVELS.DEBUG);
+if(process.env.NODE_ENV == "production"){
+  log.setLevel(log.LEVELS.INFO);
+} else {
+  log.setLevel(log.LEVELS.DEBUG);
+}
 
 async function initializeActor() {
   try {
@@ -19,14 +23,20 @@ async function initializeActor() {
     const inputValues = await initializeActorAndGetInput();
     log.debug(`Received input: ${JSON.stringify(inputValues, null, 2)}`);
 
-    const { urls, proxy: { useApifyProxy, apifyProxyGroups, apifyProxyCountry }, test } = inputValues;
+    const {
+      urls,
+      proxy: { useApifyProxy, apifyProxyGroups, apifyProxyCountry },
+      test,
+    } = inputValues;
 
     let proxyUrl = null;
     if (!useApifyProxy || !test) {
       proxyUrl = await createProxyConfig(apifyProxyGroups, apifyProxyCountry);
       log.info(`Using proxy: ${proxyUrl}`);
     } else {
-      log.info("Skipping proxy as Apify Proxy is enabled or running in test mode.");
+      log.info(
+        "Skipping proxy as Apify Proxy is enabled or running in test mode.",
+      );
     }
 
     const app = new TikTok();
@@ -65,7 +75,6 @@ async function initializeActor() {
     await Actor.setStatusMessage("Processing complete. Saving data...");
     log.info("Actor execution completed successfully.");
     await Actor.exit("Scraping complete");
-
   } catch (error) {
     handleErrors(error);
   }
@@ -102,7 +111,9 @@ async function processPostData(app, urls, proxyUrl) {
         plays: data.stats.plays,
       };
 
-      log.debug(`Processed post data for ${url}: ${JSON.stringify(flattenedData, null, 2)}`);
+      log.debug(
+        `Processed post data for ${url}: ${JSON.stringify(flattenedData, null, 2)}`,
+      );
       await Actor.pushData(flattenedData);
     });
 
@@ -111,7 +122,9 @@ async function processPostData(app, urls, proxyUrl) {
   } catch (error) {
     log.error(`Error processing post data: ${error.message}`);
     log.debug(`Stack trace: ${error.stack}`);
-    throw new DataProcessingError(`Failed to process post data: ${error.message}`);
+    throw new DataProcessingError(
+      `Failed to process post data: ${error.message}`,
+    );
   }
 }
 
@@ -122,7 +135,9 @@ async function processProfileData(app, urls, proxyUrl) {
     const profilePromises = urls.map(async (url) => {
       log.debug(`Fetching profile data for: ${url} with proxy: ${proxyUrl}`);
       const data = await app.getUserProfileData(url, proxyUrl);
-      log.debug(`Raw profile data for ${url}: ${JSON.stringify(data, null, 2)}`);
+      log.debug(
+        `Raw profile data for ${url}: ${JSON.stringify(data, null, 2)}`,
+      );
 
       const flattenedProfile = {
         userId: data.userId,
@@ -145,7 +160,9 @@ async function processProfileData(app, urls, proxyUrl) {
         videos: data.stats.videos,
       };
 
-      log.debug(`Processed profile data for ${url}: ${JSON.stringify(flattenedProfile, null, 2)}`);
+      log.debug(
+        `Processed profile data for ${url}: ${JSON.stringify(flattenedProfile, null, 2)}`,
+      );
       await Actor.pushData(flattenedProfile);
     });
 
@@ -154,7 +171,9 @@ async function processProfileData(app, urls, proxyUrl) {
   } catch (error) {
     log.error(`Error processing profile data: ${error.message}`);
     log.debug(`Stack trace: ${error.stack}`);
-    throw new DataProcessingError(`Failed to process profile data: ${error.message}`);
+    throw new DataProcessingError(
+      `Failed to process profile data: ${error.message}`,
+    );
   }
 }
 
@@ -170,7 +189,7 @@ function handleErrors(error) {
   }
 
   log.debug(`Full error stack: ${error.stack}`);
-  Actor.exit("An error occurred", { timeoutSec: 0 });
+  Actor.fail("An error occurred", { timeoutSec: 0 });
 }
 
 initializeActor();

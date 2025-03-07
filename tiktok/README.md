@@ -1,49 +1,57 @@
 # **TikTok Scraper Actor – Scrape TikTok Profiles & Posts with Apify**
 
-## **🚀 About the TikTok Scraper**  
-This **Apify TikTok Scraper Actor** lets you extract **detailed profile and post data** from TikTok. You can **scrape usernames, followers, videos, likes, comments, post URLs, and more** – all without logging in! Perfect for **marketers, data analysts, and researchers** who need structured TikTok data.  
+## **🚀 About the TikTok Scraper**
+
+This **Apify TikTok Scraper Actor** lets you extract **detailed profile and post data** from TikTok. You can **scrape usernames, followers, videos, likes, comments, post URLs, and more** – all without logging in! Perfect for **marketers, data analysts, and researchers** who need structured TikTok data.
 
 ✅ **No login required**  
 ✅ **Real-time TikTok data**  
 ✅ **Profiles & posts scraping**  
 ✅ **Export to JSON, CSV, Excel**  
-✅ **Fast & lightweight**  
+✅ **Fast & lightweight**
 
 ---
 
 ## **🔹 Features**
-### **1️⃣ Scrape TikTok Profiles**  
+
+### **1️⃣ Scrape TikTok Profiles**
+
 Get detailed profile data, including:  
 ✔️ Username & unique ID  
 ✔️ Followers & following count  
 ✔️ Account bio, links, region  
 ✔️ Profile verification status  
-✔️ Profile picture (HD)  
+✔️ Profile picture (HD)
 
-### **2️⃣ Scrape TikTok Posts**  
+### **2️⃣ Scrape TikTok Posts**
+
 Extract high-quality post details:  
 ✔️ Post ID, description, timestamp  
 ✔️ Video URL & cover image  
 ✔️ Likes, shares, comments, plays  
 ✔️ Music details (title, URL)  
-✔️ Author details (ID, username)  
+✔️ Author details (ID, username)
 
 ### **3️⃣ Output Formats**
-- **JSON** (structured API responses)  
-- **CSV** (for Excel & Sheets)  
-- **Excel** (business reports)  
-- **Apify Dataset** (visual analysis)  
+
+- **JSON** (structured API responses)
+- **CSV** (for Excel & Sheets)
+- **Excel** (business reports)
+- **Apify Dataset** (visual analysis)
 
 ---
 
-## **📥 How to Use**  
-### **1️⃣ Run on Apify Console**  
-- Open the **Apify Marketplace**  
-- Search for **TikTok Scraper**  
-- Click **Run** and input TikTok profile/post URLs  
+## **📥 How to Use**
 
-### **2️⃣ Use API to Fetch Data**  
-Make API calls to fetch TikTok data:  
+### **1️⃣ Run on Apify Console**
+
+- Open the **Apify Marketplace**
+- Search for **TikTok Scraper**
+- Click **Run** and input TikTok profile/post URLs
+
+### **2️⃣ Use API to Fetch Data**
+
+Make API calls to fetch TikTok data:
 
 ```bash
 curl "https://api.apify.com/v2/datasets/your-dataset-id/items?format=json"
@@ -110,7 +118,7 @@ curl "https://api.apify.com/v2/datasets/your-dataset-id/items?format=csv"
 ✅ Fast & Efficient – Fetch data within seconds  
 ✅ No Login Required – No need to authenticate  
 ✅ Customizable – Modify scraper settings easily  
-✅ Cloud-Based – Runs on Apify's secure cloud infrastructure  
+✅ Cloud-Based – Runs on Apify's secure cloud infrastructure
 
 ---
 

@@ -1,6 +1,5 @@
 import { Actor, log } from "apify";
 import fs from "fs/promises";
-import download from "./shared/download.js";
 
 /**
  * @return {Promise<string>} input - The input entered through apify console

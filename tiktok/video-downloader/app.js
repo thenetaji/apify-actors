@@ -115,9 +115,13 @@ async function downloadYoutubeVideo(
   });
 
   const options = [
-    "--format", selectedQuality,
-    "--fragment-retries", 3,
-    "--retries", 2];
+    "--format",
+    selectedQuality,
+    "--fragment-retries",
+    3,
+    "--retries",
+    2,
+  ];
 
   if (proxyURL) {
     log.info(`Using proxy for download: ${proxyURL}`);

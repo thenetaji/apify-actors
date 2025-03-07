@@ -32,9 +32,11 @@ export class TikTok {
 
       const $ = cheerio.load(html);
       const jsonData = $("#__UNIVERSAL_DATA_FOR_REHYDRATION__").text().trim();
-      
+
       if (!jsonData) {
-        throw new DataExtractionError({ message: "JSON data not found in HTML." });
+        throw new DataExtractionError({
+          message: "JSON data not found in HTML.",
+        });
       }
 
       let parsedData;
@@ -48,7 +50,9 @@ export class TikTok {
       const userData = parsedData["__DEFAULT_SCOPE__"]?.["webapp.user-detail"];
 
       if (!userData || !userData.userInfo?.user) {
-        throw new DataExtractionError({ message: "User profile data structure has changed or is missing." });
+        throw new DataExtractionError({
+          message: "User profile data structure has changed or is missing.",
+        });
       }
 
       log.debug("User data successfully extracted.");
@@ -110,12 +114,14 @@ export class TikTok {
       }
 
       const html = await response.text();
-      
+
       const $ = cheerio.load(html);
       const jsonData = $("#__UNIVERSAL_DATA_FOR_REHYDRATION__").text().trim();
 
       if (!jsonData) {
-        throw new DataExtractionError({ message: "JSON data not found in HTML." });
+        throw new DataExtractionError({
+          message: "JSON data not found in HTML.",
+        });
       }
 
       let parsedData;
@@ -126,10 +132,14 @@ export class TikTok {
         throw new DataExtractionError({ message: "Invalid JSON format." });
       }
 
-      const item = parsedData["__DEFAULT_SCOPE__"]?.["webapp.video-detail"]?.itemInfo?.itemStruct;
+      const item =
+        parsedData["__DEFAULT_SCOPE__"]?.["webapp.video-detail"]?.itemInfo
+          ?.itemStruct;
 
       if (!item) {
-        throw new DataExtractionError({ message: "Post data structure has changed or is missing." });
+        throw new DataExtractionError({
+          message: "Post data structure has changed or is missing.",
+        });
       }
 
       log.debug("Post data successfully extracted.");

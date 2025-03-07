@@ -13,11 +13,12 @@
         { "url": "https://www.tiktok.com/@addisonre" },
         { "url": "https://vt.tiktok.com/ZSMy827Qe/" },
         { "url": "https://www.tiktok.com/@khaby.lame" }
-        ],
+      ],
       "default": [
         { "url": "https://www.tiktok.com/@addisonre" },
         { "url": "https://vt.tiktok.com/ZSMy827Qe/" },
-        { "url": "https://www.tiktok.com/@khaby.lame" }]
+        { "url": "https://www.tiktok.com/@khaby.lame" }
+      ]
     },
     "proxy": {
       "title": "Use proxy",
