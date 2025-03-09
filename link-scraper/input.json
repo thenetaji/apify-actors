@@ -1,0 +1,16 @@
+{
+  "startUrls": [
+    {
+      "url": "https://vegamovies.rs"
+    }
+  ],
+  "mediaType": "all",
+  "maxCrawlDepth": 2,
+  "proxy": {
+    "useApifyProxy": false,
+    "apifyProxyGroups": [],
+    "countryCode": null
+  },
+  "maxConcurrency": 5,
+  "maxRequestRetries": 2
+}

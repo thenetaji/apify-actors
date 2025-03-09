@@ -1,0 +1,71 @@
+{
+  "title": "Media Download Link Crawler Input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "startUrls": {
+      "title": "Start URLs",
+      "type": "array",
+      "description": "List of URLs to start crawling from",
+      "editor": "requestListSources",
+      "prefill": [{ "url": "https://apify.com/" }],
+      "default": [{ "url": "https://apify.com/" }]
+    },
+    "mediaType": {
+      "title": "Media Type",
+      "type": "string",
+      "description": "The type of media links to extract from the crawled pages",
+      "editor": "select",
+      "enum": ["video", "audio", "image", "all"],
+      "enumTitles": [
+        "Video Files",
+        "Audio Files",
+        "Image Files",
+        "All Media Files"
+      ],
+      "default": "all"
+    },
+    "maxCrawlDepth": {
+      "title": "Maximum Crawl Depth",
+      "type": "integer",
+      "description": "Maximum depth to crawl from the start URLs (higher values may significantly increase run time)",
+      "minimum": 1,
+      "maximum": 10,
+      "default": 2
+    },
+    "maxConcurrency": {
+      "title": "Max Concurrency",
+      "type": "integer",
+      "description": "Maximum number of pages to crawl concurrently",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 10
+    },
+    "maxUrlsToCrawl": {
+      "title": "Max number of results",
+      "type": "integer",
+      "description": "Maximum number of urls to crawl",
+      "minimum": 10,
+      "default": 100
+    },
+    "maxRequestRetries": {
+      "title": "Max Request Retries",
+      "type": "integer",
+      "description": "Maximum number of times to retry a request if it fails",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 3
+    },
+        "useProxy": {
+      "title": "Use Proxy",
+      "type": "object",
+      "editor": "proxy",
+      "description": "Whether to use Apify Proxy for making requests (recommended for most websites)",
+      "default": {
+        "useApifyProxy": false,
+        "apifyProxyGroups": []
+      }
+    }
+  },
+  "required": ["startUrls", "mediaType"]
+}
