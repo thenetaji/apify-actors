@@ -57,7 +57,7 @@
       ]
     },
     "audioQuality": {
-      "title": "Select quality",
+      "title": "Select audio quality",
       "description": "Select audio quality to download, works only if 'audioOnly' option is true",
       "type": "string",
       "editor": "select",
@@ -67,7 +67,7 @@
       "enumTitles": ["best", "320kbp/s", "256kbp/s", "128kbp/s", "64kbp/s", "worst"]
     },
     "videoFormat": {
-      "title": "Select file type (can be slow) if true",
+      "title": "Select video file type (can be slow) if true",
       "description": "Select video file type (.mp4, .mkv, .webm), works only if 'audioOnly' is true",
       "type": "string",
       "editor": "select",
@@ -77,7 +77,7 @@
       "enumTitles": ["default", "mp4", "webm", "mkv"]
     },
     "audioFormat": {
-      "title": "Select file type (can be slow if true) if true",
+      "title": "Select audio file type (can be slow if true) if true",
       "description": "Select audio file type (.mp4, .mkv, .webm) , works only if 'audioOnly' is true",
       "type": "string",
       "editor": "select",

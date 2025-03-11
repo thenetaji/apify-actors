@@ -1,0 +1,14 @@
+{
+  "urls": [
+    {
+      "url": "https://youtube.com/shorts/CuC00GUDJsU?si=-ljhM2y1q_4ced1T"
+    }
+  ],
+  "quality": "320",
+  "format": "vorbis",
+  "proxy": {
+    "useApifyProxy": true,
+    "apifyProxyGroups": ["RESIDENTIAL"],
+    "countryCode": null
+  }
+}
