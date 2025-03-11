@@ -27,7 +27,7 @@ export class DataExtractionError extends CustomError {
 
 export class InputValidationError extends CustomError {
   constructor(details) {
-    super("Input validation failed some fields are missing", details);
+    super("Input validation failed: some fields are missing or incorrect", details);
   }
 }
 
@@ -37,7 +37,38 @@ export class DatabaseError extends CustomError {
   }
 }
 
-export class InitializationError extends CustomError {}
-export class ProxyConfigError extends CustomError {}
-export class DataProcessingError extends CustomError {}
-export class SaveFileError extends CustomError {}
+export class InitializationError extends CustomError {
+  constructor(details) {
+    super("Actor initialization failed", details);
+  }
+}
+
+export class ProxyConfigError extends CustomError {
+  constructor(details) {
+    super("Proxy configuration error", details);
+  }
+}
+
+export class DataProcessingError extends CustomError {
+  constructor(details) {
+    super("Error processing data", details);
+  }
+}
+
+export class SaveFileError extends CustomError {
+  constructor(details) {
+    super("Failed to save file", details);
+  }
+}
+
+export class InvalidURLError extends CustomError {
+  constructor(details) {
+    super("Invalid URL detected", details);
+  }
+}
+
+export class DownloadError extends CustomError {
+  constructor(details) {
+    super("Download process failed", details);
+  }
+}

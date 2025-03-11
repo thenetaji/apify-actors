@@ -1,0 +1,13 @@
+{
+  "urls": [{ "url": "https://youtube.com/shorts/CuC00GUDJsU?si=-ljhM2y1q_4ced1T" }],
+  "audioQuality": "worst",
+  "videoQuality": "worst",
+  "audioFormat": "default",
+  "videoFormat": "default",
+  "audioOnly": false,
+  "proxy": {
+    "useApifyProxy": false,
+    "apifyProxyGroups": [],
+    "countryCode": null
+  }
+}

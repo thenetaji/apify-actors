@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "title": "Youtube Video and Music downloader input fields",
+  "description": "Input Youtube Video URL and configure other options",
+  "type": "object",
+  "properties": {
+    "urls": {
+      "title": "Video URLs",
+      "type": "array",
+      "description": "The URL of the video to download",
+      "editor": "requestListSources",
+      "prefill": [
+        { "url": "https://youtube.com/shorts/CuC00GUDJsU?si=-ljhM2y1q_4ced1T" }
+      ],
+      "default": [
+        { "url": "https://youtube.com/shorts/CuC00GUDJsU?si=-ljhM2y1q_4ced1T" }
+      ]
+    },
+    "audioOnly": {
+      "title": "Extract audio only",
+      "type": "boolean",
+      "description": "Extract only audio from a video useful if you want only want audio from a video or want to download music",
+      "prefill": false
+    },
+    "videoQuality": {
+      "title": "Select video quality",
+      "description": "Select video quality to download, works only if 'audioOnly' option is false",
+      "type": "string",
+      "editor": "select",
+      "default": "360",
+      "prefill": "360",
+      "enum": [
+        "144",
+        "240",
+        "360",
+        "480",
+        "720",
+        "1080",
+        "1440",
+        "2160",
+        "4320",
+        "best",
+        "worst"
+      ],
+      "enumTitles": [
+        "144p",
+        "240p",
+        "360p",
+        "480p",
+        "720p",
+        "1080p",
+        "1440p",
+        "2160p",
+        "4320p",
+        "best",
+        "worst"
+      ]
+    },
+    "audioQuality": {
+      "title": "Select quality",
+      "description": "Select audio quality to download, works only if 'audioOnly' option is true",
+      "type": "string",
+      "editor": "select",
+      "default": "best",
+      "prefill": "best",
+      "enum": ["best", "320", "256", "128", "64", "worst"],
+      "enumTitles": ["best", "320kbp/s", "256kbp/s", "128kbp/s", "64kbp/s", "worst"]
+    },
+    "videoFormat": {
+      "title": "Select file type (can be slow) if true",
+      "description": "Select video file type (.mp4, .mkv, .webm), works only if 'audioOnly' is true",
+      "type": "string",
+      "editor": "select",
+      "default": "default",
+      "prefill": "default",
+      "enum": ["default", "mp4", "webm", "mkv"],
+      "enumTitles": ["default", "mp4", "webm", "mkv"]
+    },
+    "audioFormat": {
+      "title": "Select file type (can be slow if true) if true",
+      "description": "Select audio file type (.mp4, .mkv, .webm) , works only if 'audioOnly' is true",
+      "type": "string",
+      "editor": "select",
+      "default": "default",
+      "prefill": "default",
+      "enum": [
+        "default",
+        "aac",
+        "alac",
+        "flac",
+        "m4a",
+        "mp3",
+        "opus",
+        "vorbis",
+        "wav"
+      ],
+      "enumTitles": [
+        "default",
+        "aac",
+        "alac",
+        "flac",
+        "m4a",
+        "mp3",
+        "opus",
+        "vorbis",
+        "wav"
+      ]
+    },
+    "concurrency": {
+      "title": "Concurrency",
+      "type": "integer",
+      "description": "Number of parts to download at a time. Higher values increase speed but use more bandwidth. A safe limit is 5-10 to avoid rate limiting",
+      "default": 5,
+      "maximum": 20
+    },
+    "proxy": {
+      "title": "Use proxy",
+      "type": "object",
+      "editor": "proxy",
+      "description": "Enable proxy for downloading, only residential proxy would be used as others don't work",
+      "default": {
+        "useApifyProxy": true,
+        "apifyProxyGroups": ["RESIDENTIAL"]
+      }
+    }
+  },
+  "required": ["urls", "audioQuality", "videoQuality"]
+}
