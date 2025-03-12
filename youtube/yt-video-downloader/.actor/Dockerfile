@@ -1,5 +1,7 @@
 FROM node:alpine
 
+ENV NODE_ENV=production
+
 # Install dependencies and create a Python virtual environment
 RUN apk update -q && \
     apk add --no-cache -q python3 py3-pip ffmpeg && \

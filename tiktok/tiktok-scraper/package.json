@@ -1,0 +1,15 @@
+{
+  "name": "tiktok",
+  "version": "1.1",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "push": "cp -r ../../shared ./ && apify push"
+  },
+  "dependencies": {
+    "apify": "^3.3.2",
+    "https-proxy-agent": "^7.0.6",
+    "user-agents": "^1.1.463"
+  }
+}

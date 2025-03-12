@@ -1,0 +1,18 @@
+{
+  "name": "apify-youtube-scraper-actor",
+  "version": "1.0",
+  "description": "Scrape youtube videos at scale.",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "push": "cp -r ../../shared ./ && apify push",
+    "test": "jest"
+  },
+  "dependencies": {
+    "apify": "^3.2.6"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

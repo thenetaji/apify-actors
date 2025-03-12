@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "title": "TikTok Scraper input fields",
+  "description": "Input fields and configure other options",
+  "type": "object",
+  "properties": {
+    "urls": {
+      "title": "URLs",
+      "type": "array",
+      "description": "The URL of the post or user profile to scrape",
+      "editor": "requestListSources",
+      "prefill": [
+        { "url": "https://www.tiktok.com/@addisonre" },
+        { "url": "https://vt.tiktok.com/ZSMy827Qe/" },
+        { "url": "https://www.tiktok.com/@khaby.lame" }
+      ],
+      "default": [
+        { "url": "https://www.tiktok.com/@addisonre" },
+        { "url": "https://vt.tiktok.com/ZSMy827Qe/" },
+        { "url": "https://www.tiktok.com/@khaby.lame" }
+      ]
+    },
+    "proxy": {
+      "title": "Use proxy",
+      "type": "object",
+      "editor": "proxy",
+      "description": "Enable proxy for scraping, use residential for highest success rate",
+      "default": {
+        "useApifyProxy": false
+      }
+    }
+  },
+  "required": ["urls"]
+}

@@ -1,0 +1,13 @@
+{
+  "actorSpecification": 1,
+  "name": "tiktok-profile-scraper",
+  "version": "1.0",
+  "buildTag": "latest",
+  "maxMemoryMbytes": 2048,
+  "dockerfile": "./Dockerfile",
+  "readme": "../README.md",
+  "input": "./input_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}
