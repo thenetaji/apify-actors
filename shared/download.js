@@ -3,6 +3,12 @@ import log from "@apify/log";
 import UserAgent from "user-agents";
 import path from "path";
 
+if (process.env.NODE_ENV == "production") {
+  log.setLevel(log.LEVELS.INFO);
+} else {
+  log.setLevel(log.LEVELS.DEBUG);
+}
+
 /**
  * Attempts to download the content using yt-dlp.
  * @param {Array} options - The array of URLs to download.
@@ -18,12 +24,13 @@ async function tryDownload(options) {
     "--no-warning",
     "--no-check-certificate",
     "--output",
-    "%(title)s.%(ext)s",
+    "%(title).50s.%(ext)s",
     "--restrict-filenames",
     "--exec",
     "echo FINAL_FILE:{}",
     ...options,
   ];
+  log.debug(`overall final options being passed to ytdlp: ${JSON.stringify(configs)}`);
 
   return new Promise((resolve, reject) => {
     const shell = spawn("yt-dlp", configs);

@@ -1,6 +1,6 @@
 {
   "actorSpecification": 1,
-  "name": "video-download-link-crawler ",
+  "name": "video-download-link-crawler",
   "version": "1.0",
   "dockerfile": "./Dockerfile",
   "readme": "../README.md",

@@ -21,41 +21,36 @@ export const createMediaLinkDetector = (mediaType, customPatterns = []) => {
   switch (mediaType) {
     case "video":
       defaultPatterns = [
-        // Common video file extensions
         /\.(mp4|webm|ogg|mov|avi|wmv|flv|mkv|m4v|3gp)(\?.*)?$/i,
-        // Common video streaming patterns
         /\/video\/|\/videos\/|\/watch\?v=|\/embed\/|player\.php/i,
-        // Various video API endpoints
         /\/(get_video|video_url|playback|stream)\/|\/(video|media)\.php/i,
       ];
       break;
     case "audio":
       defaultPatterns = [
-        // Common audio file extensions
         /\.(mp3|wav|ogg|aac|flac|m4a)(\?.*)?$/i,
-        // Common audio streaming patterns
         /\/audio\/|\/sound\/|\/listen\/|\/track\//i,
-        // Various audio API endpoints
         /\/(get_audio|audio_url|stream)\/|\/(audio|sound)\.php/i,
       ];
       break;
     case "image":
       defaultPatterns = [
-        // Common image file extensions
         /\.(jpg|jpeg|png|gif|webp|svg|bmp|tiff)(\?.*)?$/i,
-        // Common image paths
         /\/images\/|\/img\/|\/photos\/|\/gallery\//i,
-        // Various image API endpoints
         /\/(get_image|image_url)\/|\/(image|photo)\.php/i,
+      ];
+      break;
+    case "apk":
+      defaultPatterns = [
+        /\.(apk|xapk)(\?.*)?$/i, // Match .apk and .xapk file extensions
+        /\/download\/|\/apk\//i, // Common APK download paths
+        /\/(get_apk|apk_url|install)\/|\/(apk|android)\.php/i,
       ];
       break;
     case "all":
       defaultPatterns = [
-        // All media extensions combined
-        /\.(mp4|webm|ogg|mov|avi|wmv|flv|mkv|m4v|3gp|mp3|wav|aac|flac|m4a|jpg|jpeg|png|gif|webp|svg|bmp|tiff)(\?.*)?$/i,
-        // Common media paths
-        /\/video\/|\/videos\/|\/audio\/|\/images\/|\/img\/|\/media\//i,
-        // Common streaming patterns
+        /\.(mp4|webm|ogg|mov|avi|wmv|flv|mkv|m4v|3gp|mp3|wav|aac|flac|m4a|jpg|jpeg|png|gif|webp|svg|bmp|tiff|apk|xapk)(\?.*)?$/i,
+        /\/video\/|\/videos\/|\/audio\/|\/images\/|\/img\/|\/media\/|\/apk\//i,
         /\/watch\?v=|\/embed\/|player\.php|\/track\//i,
       ];
       break;

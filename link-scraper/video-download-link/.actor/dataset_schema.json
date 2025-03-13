@@ -1,0 +1,36 @@
+{
+  "actorSpecification": 1,
+  "title": "video-download-link-crawler ",
+  "views": {
+    "overview": {
+      "title": "Overview",
+      "display": {
+        "component": "table",
+        "properties": {
+          "sourceUrl": {
+            "label": "Source Page",
+            "format": "link"
+          },
+          "pageTitle": {
+            "label": "Page Title"
+          },
+          "mediaLinks": {
+            "label": "# of Media Links",
+            "format": "count"
+          },
+          "timestamp": {
+            "label": "Crawled At"
+          }
+        }
+      },
+      "transformation": {
+        "fields": [
+          "sourceUrl",
+          "pageTitle",
+          "mediaLinks",
+          "timestamp"
+        ]
+      }
+    }
+  }
+}

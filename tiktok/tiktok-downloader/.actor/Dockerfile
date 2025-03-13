@@ -12,7 +12,7 @@ RUN apk add --no-cache python3 py3-pip ffmpeg && \
 # Set environment variables
 ENV PATH="/opt/venv/bin:$PATH"
 
-RUN apt update && apt install -y ca-certificates && update-ca-certificates
+RUN apk add --no-cache ca-certificates
 
 # Set the working directory
 WORKDIR /app

@@ -1,5 +1,5 @@
 {
-  "title": "Media Download Link Crawler Input",
+  "title": "Apk Download Link Crawler Input",
   "type": "object",
   "schemaVersion": 1,
   "properties": {
@@ -8,22 +8,23 @@
       "type": "array",
       "description": "List of URLs to start crawling from",
       "editor": "requestListSources",
-      "prefill": [{ "url": "https://apify.com/" }],
-      "default": [{ "url": "https://apify.com/" }]
+      "prefill": [{ "url": "https://www.apkmirror.com/" }],
+      "default": [{ "url": "https://www.apkmirror.com/" }]
     },
     "mediaType": {
       "title": "Media Type",
       "type": "string",
       "description": "The type of media links to extract from the crawled pages",
       "editor": "select",
-      "enum": ["video", "audio", "image", "all"],
+      "enum": ["video", "audio", "image", "apk", "all"],
       "enumTitles": [
         "Video Files",
         "Audio Files",
         "Image Files",
+        "Apk Files",
         "All Media Files"
       ],
-      "default": "all"
+      "default": "apk"
     },
     "maxCrawlDepth": {
       "title": "Maximum Crawl Depth",

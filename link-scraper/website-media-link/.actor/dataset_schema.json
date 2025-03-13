@@ -24,12 +24,7 @@
         }
       },
       "transformation": {
-        "fields": [
-          "sourceUrl",
-          "pageTitle",
-          "mediaLinks",
-          "timestamp"
-        ]
+        "fields": ["sourceUrl", "pageTitle", "mediaLinks", "timestamp"]
       }
     }
   }
