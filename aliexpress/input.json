@@ -1,0 +1,16 @@
+{
+  "startUrls": [
+    {
+      "url": ""
+    },
+    {
+      "url": ""
+    }
+  ],
+  "maxUrlsToCrawl": 10,
+  "proxy": {
+    "useApifyProxy": false,
+    "apifyProxyGroups": [],
+    "countryCode": null
+  }
+}

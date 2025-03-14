@@ -1,0 +1,33 @@
+{
+  "title": "Aliexpress scraper Input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "startUrls": {
+      "title": "Start URLs",
+      "type": "array",
+      "description": "List of URLs of products or categories to start crawling",
+      "editor": "requestListSources",
+      "prefill": [{ "url": "" }],
+      "default": [{ "url": "" }]
+    },
+    "maxUrlsToCrawl": {
+      "title": "Max number of results",
+      "type": "integer",
+      "description": "Maximum number of urls to crawl",
+      "minimum": 10,
+      "default": 25
+    },
+    "useProxy": {
+      "title": "Use Proxy",
+      "type": "object",
+      "editor": "proxy",
+      "description": "whether to use proxy and which type",
+      "default": {
+        "useApifyProxy": false,
+        "apifyProxyGroups": []
+      }
+    }
+  },
+  "required": ["startUrls"]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "website-media-link-scraper",
+  "version": "1.0",
+  "description": "Crawls websites to find different media links",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "apify": "^3.0.0",
+    "cheerio": "^1.0.0-rc.12",
+    "crawlee": "^3.13.0",
+    "got-scraping": "^4.1.1"
+  },
+  "author": "thenetaji",
+  "license": "ISC"
+}
